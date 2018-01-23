@@ -19,7 +19,6 @@ package util;
 /**
  * Classe Vértice do Grafo.
  * @author Gustavo Henrique.
- * @author Leonardo Melo.
  * @since 16 abr. 2016.
  */
 

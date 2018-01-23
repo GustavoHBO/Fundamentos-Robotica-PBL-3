@@ -28,7 +28,6 @@ import java.util.Set;
 /**
  * Classe do algoritmo de Dijkstra, responsável por descobrir o menor caminho em um grafo.
  * @author Gustavo Henrique.
- * @author Leonardo Melo.
  */
 public class Dijkstra {
 

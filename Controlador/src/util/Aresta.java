@@ -19,7 +19,6 @@ package util;
 /**
  * Classe aresta.
  * @author Gustavo Henrique.
- * @author Leonardo Melo.
  */
 public class Aresta {
 
