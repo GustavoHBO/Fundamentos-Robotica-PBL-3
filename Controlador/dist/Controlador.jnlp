@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="Controlador.jnlp">
+  <information>
+    <title>Controlador</title>
+    <vendor>Gustavo Henrique</vendor>
+    <description>Aplicação para gerar mapas com obstáculos, introduzindo o ponto inicial, ponto final e obstáculos
+caso existam. Então gerar um caminho, viável, onde o robô possa trafegar sem colisões.</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="Controlador.jar" size="5272" download="eager" />
+  </resources>
+  <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="Controlador" >
+    <param name="requiredFXVersion" value="8.0+"/>
+  </applet-desc>
+  <jfx:javafx-desc  width="800" height="600" main-class="controlador.Controlador"  name="Controlador" />
+  <update check="always"/>
+</jnlp>
