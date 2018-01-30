@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="200" prefWidth="320" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.FXMLDocumentController">
-    <children>
-        <Button layoutX="126" layoutY="90" text="Click Me!" onAction="#handleButtonAction" fx:id="button" />
-        <Label layoutX="126" layoutY="120" minHeight="16" minWidth="69" fx:id="label" />
-    </children>
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.FXMLDocumentController">
+   <children>
+      <Pane fx:id="paneControle" prefHeight="400.0" prefWidth="500.0">
+         <children>
+            <Button fx:id="botaoNada" layoutX="424.0" layoutY="20.0" mnemonicParsing="false" onAction="#eventButtonNada" text="Nada" />
+            <Button fx:id="botaoObstaculo" layoutX="408.0" layoutY="54.0" mnemonicParsing="false" onAction="#eventButtonObstaculo" text="Obstáculo" />
+         </children>
+      </Pane>
+      <Pane fx:id="paneMapa" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: CFD5E6;" />
+   </children>
 </AnchorPane>

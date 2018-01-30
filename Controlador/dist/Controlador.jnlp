@@ -9,7 +9,7 @@ caso existam. Então gerar um caminho, viável, onde o robô possa trafegar sem 
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="Controlador.jar" size="5272" download="eager" />
+    <jar href="Controlador.jar" size="105066" download="eager" />
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="Controlador" >
     <param name="requiredFXVersion" value="8.0+"/>
