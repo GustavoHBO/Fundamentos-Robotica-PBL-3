@@ -23,7 +23,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 /**
- * Classe para desenho do mapa.
+ * Classe para desenho do mapa. Os circulos pretos são vértices normais, o verde é o inicio do caminho, o amarelo o fim e o vermelho obstáculos.
  * @author Gustavo Henrique.
  */
 public class Circulo extends ImageView{
@@ -31,6 +31,9 @@ public class Circulo extends ImageView{
     /* Declaração da posição da imagem */
     private int posX = 0;
     private int posY = 0;
+    
+    /* Flag sinalizadora para in */
+    private int nivel = 0; // Indica o nível do circulo, 0 - Comum, 1 - Inicio, 2 - Fim e 3 - Obstáculo.
     
     /* url das imagens */
     private final String imgPreta = "/img/circuloPreto.jpg";
@@ -81,15 +84,18 @@ public class Circulo extends ImageView{
             public void handle(MouseEvent event) {
                 if (FXMLDocumentController.s == 0) {
                     setImgVerde();
+                    nivel = 1;
                     FXMLDocumentController.s++;
                 } else if (FXMLDocumentController.s == 1) {
                     if (!url.equals(imgVerde)) {
                         setImgAmarelo();
+                        nivel = 2;
                         FXMLDocumentController.s++;
                     }
                 } else if (FXMLDocumentController.s == 2) {
                     if (!url.equals(imgVerde) && !url.equals(imgAmarelo)) {
                         setImgVermelho();
+                        nivel = 3;
                         setLayoutX(getPosX() * 40);
                         setLayoutY(getPosY() * 40);
                         setFitWidth(40);
@@ -98,6 +104,7 @@ public class Circulo extends ImageView{
                 } else if (FXMLDocumentController.s == 3) {
                     if (!url.equals(imgVerde) && !url.equals(imgAmarelo)) {
                         setImgPreta();
+                        nivel = 0;
                     }
                 }
             }
@@ -161,5 +168,12 @@ public class Circulo extends ImageView{
      */
     public void setPosY(int posY) {
         this.posY = posY;
+    }
+
+    /**
+     * @return the nivel do circulo. 0 - Comum, 1 - Inicio, 2 - Fim e 3 - Obstáculo.
+     */
+    public int getNivel() {
+        return nivel;
     }
 }

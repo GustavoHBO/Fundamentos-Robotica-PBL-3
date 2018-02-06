@@ -19,6 +19,7 @@ package util;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import model.Circulo;
 
 public class Grafo{
 
@@ -76,11 +77,11 @@ public class Grafo{
 
 	/*______________________________________________________________________________________________________________________________*/
 	/**
-	 * Remove o vértice a partir do objeto do vértice.
-	 * @param Object - Objeto inserido
+	 * Insere o vértice a partir do objeto do vértice.
+	 * @param Circulo - Objeto inserido
 	 * @return Vertice - O vértice com o objeto inserido
 	 */
-	public Vertice inserir(Object o) {
+	public Vertice inserir(Circulo o) {
 		if(o == null){// Caso o objeto recebido seja nulo.
 			return null;
 		}
@@ -142,7 +143,7 @@ public class Grafo{
 	 * @param Object - Objeto do vértice a ser removido.
 	 * @return Vertice - Vértice removido || null - Caso o vértice não seja encontrado.
 	 */
-	public Vertice removerVertice(Object o){
+	public Vertice removerVertice(Circulo o){
 		Iterator<Aresta> it = listaArestas.iterator();
 
 		Vertice vertice = buscarVertice(o);
@@ -167,7 +168,7 @@ public class Grafo{
 	 * @param Object - Objeto do vértice procurado.
 	 * @return Vertice - Vértice procurado | null - Caso o vértice não seja encontrado.
 	 */
-	public Vertice buscarVertice(Object objeto){
+	public Vertice buscarVertice(Circulo objeto){
 		Iterator<Vertice> it = listaVertices.iterator();
 		Vertice vertice = null;
 		while(it.hasNext()){
