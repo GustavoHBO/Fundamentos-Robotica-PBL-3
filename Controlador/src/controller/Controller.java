@@ -17,6 +17,8 @@
 package controller;
 
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import model.Ponto;
 import util.Grafo;
 import util.Vertice;
@@ -105,6 +107,8 @@ public class Controller {
             }
         }
         System.out.println("Quantidade de pontos: " + grafoExpandido.getVertices().size());
+        exibirPontos(grafoExpandido);
+        montarGrafoVisibilidade(grafoExpandido);
     }
     
     /**
@@ -150,9 +154,142 @@ public class Controller {
         }
     }
     
-    private void montarGrafoVisibilidade(Grafo grafo){
+    private void montarGrafoVisibilidade(Grafo grafo) {
         Ponto p;
-        Vertice v;
-        
+        Ponto pC, pD, pB, pE; // Ponto acima, ponto a direita, ponto abaixo e ponto a esquerda.
+        Vertice v1, v2, v3;
+        grafoVisibilidade = new Grafo();
+        Iterator<Vertice> it = grafo.getVertices().iterator();
+        while (it.hasNext()) {
+            v1 = it.next();
+            v3 = v1;
+            p = (Ponto) v1.getObjeto();
+            p = buscarVisinhoEsquerda(p.getX(), p.getY(), grafo);
+            pB = p;
+            if (p == null) {
+                p = (Ponto) v1.getObjeto();
+            }
+            pD = buscarPonto(p.getX(), p.getY(), grafoVisibilidade);
+            pC = buscarVisinhoDireita(p.getX(), p.getY(), grafo);
+            if (pC != null) {
+                if (pD == null && buscarPonto(p.getX(), p.getY(), grafoVisibilidade) == null) {
+                    grafoVisibilidade.inserir(p);
+                }
+                v1 = buscarVertice(p.getX(), p.getY(), grafoVisibilidade);
+                if (pC.getX() != p.getX() && pC.getY() != p.getY()) {
+                    if (buscarPonto(pC.getX(), pC.getY(), grafoVisibilidade) == null) {
+                        grafoVisibilidade.inserir(pC);
+                    }
+                    v2 = buscarVertice(pC.getX(), pC.getY(), grafoVisibilidade);
+                    grafoVisibilidade.inserirAresta(v1, v2, ESPACO);
+                }
+            }
+            pD = buscarVisinhoCima(p.getX(), p.getY(), grafo);
+            if (pD == null) {
+                p = (Ponto) v3.getObjeto();
+            } else {
+                p = pD;
+            }
+
+            pC = buscarVisinhoBaixo(p.getX(), p.getY(), grafo);
+            if (pC != null) {
+                if (pD == null && buscarPonto(p.getX(), p.getY(), grafoVisibilidade) == null) {
+                    grafoVisibilidade.inserir(p);
+                }
+                v1 = buscarVertice(p.getX(), p.getY(), grafoVisibilidade);
+                if (buscarPonto(pC.getX(), pC.getY(), grafoVisibilidade) == null) {
+                    grafoVisibilidade.inserir(pC);
+                }
+                v2 = buscarVertice(pC.getX(), pC.getY(), grafoVisibilidade);
+                grafoVisibilidade.inserirAresta(v1, v2, ESPACO);
+            }
+        }
+        System.out.println("Quantidade de Vertices do grafo de visibilidade: " + grafoVisibilidade.getVertices().size());
+        System.out.println("Quantidade de arestas do grafo de visibilidade: " + grafoVisibilidade.getArestas().size());
+    }
+    
+    private Ponto buscarVisinhoDireita(int x, int y, Grafo grafo) {
+        Ponto p = buscarPonto(x + ESPACO, y, grafo);
+        if (p != null) {
+            if (buscarPonto(p.getX(), p.getY() + ESPACO, grafo) != null || buscarPonto(p.getX(), p.getY() - ESPACO, grafo) != null) {
+                return p;
+            } else if(buscarPonto(p.getX() + ESPACO, p.getY(), grafo) != null){
+                return buscarVisinhoDireita(p.getX(), p.getY(), grafo);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    private Ponto buscarVisinhoEsquerda(int x, int y, Grafo grafo) {
+        Ponto p = buscarPonto(x - ESPACO, y, grafo);
+        if (p != null) {
+            if (buscarPonto(p.getX(), p.getY() + ESPACO, grafo) != null || buscarPonto(p.getX(), p.getY() - ESPACO, grafo) != null) {
+                return p;
+            } else if (buscarPonto(p.getX() - ESPACO, p.getY(), grafo) != null) {
+                return buscarVisinhoEsquerda(p.getX(), p.getY(), grafo);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    private Ponto buscarVisinhoCima(int x, int y, Grafo grafo) {
+        Ponto p = buscarPonto(x, y + ESPACO, grafo);
+        if (p != null) {
+            if (buscarPonto(p.getX() + ESPACO, p.getY(), grafo) != null || buscarPonto(p.getX() - ESPACO, p.getY(), grafo) != null) {
+                return p;
+            } else if (buscarPonto(p.getX(), p.getY() + ESPACO, grafo) != null) {
+                return buscarVisinhoCima(p.getX(), p.getY(), grafo);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+    
+    private Ponto buscarVisinhoBaixo(int x, int y, Grafo grafo) {
+        Ponto p = buscarPonto(x, y - ESPACO, grafo);
+        if (p != null) {
+            if (buscarPonto(p.getX() + ESPACO, p.getY(), grafo) != null || buscarPonto(p.getX() - ESPACO, p.getY(), grafo) != null) {
+                return p;
+            } else if (buscarPonto(p.getX(), p.getY() - ESPACO, grafo) != null) {
+                return buscarVisinhoBaixo(p.getX(), p.getY(), grafo);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+    
+    private Vertice buscarVertice(int x, int y, Grafo grafo){
+        Vertice v = null;
+        Ponto p = null;
+        Iterator<Vertice> it = grafo.getVertices().iterator();
+        while(it.hasNext()){
+            v = it.next();
+            p = (Ponto) v.getObjeto();
+            if(p.getX() == x && p.getY() == y){
+                return v;
+            }
+        }
+        return null;
+    }
+    
+    public void exibirPontos(Grafo grafo){
+        Vertice v = null;
+        Ponto p = null;
+        Iterator<Vertice> it = grafo.getVertices().iterator();
+        while(it.hasNext()){
+            v = it.next();
+            p = (Ponto) v.getObjeto();
+            System.out.println("Ponto(" + p.getX() + "," + p.getY() + ")");
+        }
     }
 }
