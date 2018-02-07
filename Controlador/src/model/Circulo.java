@@ -17,6 +17,7 @@
 package model;
 
 import controlador.FXMLDocumentController;
+import controller.Controller;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -100,11 +101,13 @@ public class Circulo extends ImageView{
                         setLayoutY(getPosY() * 40);
                         setFitWidth(40);
                         setFitHeight(40);
+                        Controller.getInstance().adicionarObstaculo(posX, posY);
                     }
                 } else if (FXMLDocumentController.s == 3) {
                     if (!url.equals(imgVerde) && !url.equals(imgAmarelo)) {
                         setImgPreta();
                         nivel = 0;
+                        Controller.getInstance().removerObstaculo(posX, posY);
                     }
                 }
             }

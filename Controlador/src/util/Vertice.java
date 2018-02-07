@@ -16,8 +16,6 @@
  */
 package util;
 
-import model.Circulo;
-
 /**
  * Classe Vértice do Grafo.
  * @author Gustavo Henrique.
@@ -28,7 +26,7 @@ public class Vertice {
 
 	private int grau;
 	private boolean foiVisitado = false;
-	private Circulo objeto;
+	private Object objeto;
 
 	/*___________________________________________________________________________________________*/
 	/**
@@ -53,7 +51,7 @@ public class Vertice {
 	 * Construtor da classe.	
 	 * @param Object - Objeto do vértice.
 	 */
-	public Vertice(Circulo objeto){
+	public Vertice(Object objeto){
 		this.setObjeto(objeto);
 		grau = 0;
 		//listaArestas = new ArrayList<Aresta>();
@@ -80,17 +78,17 @@ public class Vertice {
 
 	/**
 	 * Retorna o objeto do vértice.
-	 * @return Circulo - Objeto do vértice.
+	 * @return Object - Objeto do vértice.
 	 */
-	public Circulo getObjeto() {
+	public Object getObjeto() {
 		return objeto;
 	}
 	/*___________________________________________________________________________________________*/
 	/**
 	 * Altera o objeto do vértice.
-	 * @param Circulo - Novo objeto do vértice.
+	 * @param Object - Novo objeto do vértice.
 	 */
-	public void setObjeto(Circulo objeto) {
+	public void setObjeto(Object objeto) {
 		this.objeto = objeto;
 	}
 	/*___________________________________________________________________________________________*/
