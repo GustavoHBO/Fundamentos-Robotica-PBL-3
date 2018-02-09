@@ -52,8 +52,9 @@ public class FXMLDocumentController implements Initializable {
     
     /* Váriáveis finais, para controle do mapa */
     
-    private final int QTNVV = 10; // Quantidade de vértices na vertical.
-    private final int QTNVH = 10; // Quantidade de vértices na horizontal.
+    private final int QTNVV = 20; // Quantidade de vértices na vertical.
+    private final int QTNVH = 20; // Quantidade de vértices na horizontal.
+    private final int ESPACOBORDA = 10; // Espaço entre a borda de os circulos..
     private final int PESO = 1; // Peso entre os vértices.
     
     public static int s = 0; // Determina o modo de interação dos circulos, 0 para inicio, 1 para fim, 2 para obstáculo e 3 para nada.
@@ -94,10 +95,10 @@ public class FXMLDocumentController implements Initializable {
         int j = 0;
         
         int espacoX = 0;
-        int espacoY = QTNVV;
+        int espacoY = ESPACOBORDA;
         
         for (i = 0; i < QTNVV; i++) {
-            espacoX = QTNVH;
+            espacoX = ESPACOBORDA;
             for (j = 0; j < QTNVH; j++) {
                 c = new Circulo();
                 listaCirculos.add(c);

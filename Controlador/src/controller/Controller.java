@@ -30,7 +30,7 @@ public class Controller {
     
     /* Definições */
     private final int ESPACO = 1; // Espaço entre os vertices.
-    private final int TTOTAL = 10; // Tamanho total do mapa.
+    private final int TTOTAL = 20; // Tamanho total do mapa.
     
     /* Grafo de obstáculos */
     private Grafo grafoObstaculos;
@@ -163,28 +163,21 @@ public class Controller {
         while (it.hasNext()) {
             v1 = it.next();
             p = (Ponto) v1.getObjeto();
-            System.out.println("Analizando o Ponto(" + p.getX() + "," + p.getY() + ")");
             pE = buscarVisinhoEsquerda(p.getX(), p.getY(), grafo);
             if (pE == null) {
-                System.out.println("PE nulo");
                 pE = p;
             }
             if (buscarPonto(pE.getX(), pE.getY(), grafoVisibilidade) == null) {
                 grafoVisibilidade.inserir(pE);
             }
             v2 = buscarVertice(pE.getX(), pE.getY(), grafoVisibilidade);
-            System.out.println("pE: (" + pE.getX() + "," + pE.getY() + ")");
             pD = buscarVisinhoDireita(p.getX(), p.getY(), grafo);
             if (pD == null) {
-                System.out.println("pD Nulo");
                 pD = p;
             }
             if (buscarPonto(pD.getX(), pD.getY(), grafoVisibilidade) == null) {
                 grafoVisibilidade.inserir(pD);
             }
-            //v3 = buscarVertice(pD.getX(), pD.getY(), grafoVisibilidade);
-            System.out.println("pD: (" + pD.getX() + "," + pD.getY() + ")");
-            //grafoVisibilidade.inserirArestaNaoOrientada(v2, v3, ESPACO);
             if (pE.getX() == pD.getX() && pE.getY() == pD.getY()) {
                 pA = buscarVisinhoCima(pE.getX(), pE.getY(), grafo);
                 if (pA == null) {
@@ -201,47 +194,31 @@ public class Controller {
                 }
                 if (pA == null) {// Só entra aqui caso o ponto não possua nenhum vizinho.
                     if (buscarPonto(pE.getX(), pE.getY(), grafoVisibilidade) == null) {
-                        System.out.println("Não possue vizinhos");
                         grafoVisibilidade.inserir(pE);
                     }
                 } else {
                     v2 = buscarVertice(pA.getX(), pA.getY(), grafoVisibilidade);
                     v3 = buscarVertice(pA2.getX(), pA2.getY(), grafoVisibilidade);
-                    System.out.println("Inserir aresta pA, pA2");
-                    System.out.println("pA: (" + pA.getX() + "," + pA.getY() + ")");
-                    System.out.println("pA2: (" + pA2.getX() + "," + pA2.getY() + ")");
                     grafoVisibilidade.inserirAresta(v2, v3, ESPACO);
                 }
             } else {
                 if (pD != null) {
                     v3 = buscarVertice(pD.getX(), pD.getY(), grafoVisibilidade);
-                    System.out.println("Inserir aresta pE, pD");
                     grafoVisibilidade.inserirAresta(v2, v3, ESPACO);
                 }
                 pC = buscarVisinhoCima(p.getX(), p.getY(), grafo);
                 if (pC == null) {
                     pC = p;
-                    System.out.println("pC nulo");
-                }
-                if (buscarPonto(pC.getX(), pC.getY(), grafoVisibilidade) == null) {
-                    //grafoVisibilidade.inserir(pC);
                 }
                 v2 = buscarVertice(pC.getX(), pC.getY(), grafoVisibilidade);
-                if(v2==null){
-                    System.out.println("v2 nulo");
-                }
-                System.out.println("pC: (" + pC.getX() + "," + pC.getY() + ")");
                 pB = buscarVisinhoBaixo(p.getX(), p.getY(), grafo);
                 if (pB == null) {
                     pB = p;
-                    System.out.println("pB nulo");
                 }
                 if (buscarPonto(pB.getX(), pB.getY(), grafoVisibilidade) == null) {
                     grafoVisibilidade.inserir(pB);
                 }
                 if (pC.getX() != pB.getX() || pC.getY() != pB.getY()) {
-                    System.out.println("pB: (" + pB.getX() + "," + pB.getY() + ")");
-                    System.out.println("Inserir aresta pC, pB");
                     v3 = buscarVertice(pB.getX(), pB.getY(), grafoVisibilidade);
                     grafoVisibilidade.inserirAresta(v2, v3, ESPACO);
                 }
