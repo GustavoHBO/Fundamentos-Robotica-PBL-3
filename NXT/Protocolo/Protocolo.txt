@@ -1,0 +1,17 @@
+[cIdA][qtnP][qtnR][qtnC][qntG][ld][cF]
+
+cIdA - Caractere identificador de caminho(0x23).
+qtnP - Quantidade de passos da trajetoria.
+qtnR - Quantidade de rotações da roda.
+qtnC - Quantidade de click's do encoder.
+qtnG - Quantidade de graus para girar.
+ld - Lado para o qual o giro vai ser executado.
+cF - Caractere de fim de caminho(0xFF).
+
+[cIdI]
+
+cIdI - Caractere identificador de inicio(0x40).
+
+
+Definições:
+	- Valores maiores que 250(0xFA), o 255(0xFF) está sendo utilizado como fim do movimento.
