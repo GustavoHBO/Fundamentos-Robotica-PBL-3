@@ -94,14 +94,13 @@ public class Circulo extends ImageView{
                         FXMLDocumentController.s++;
                     }
                 } else if (FXMLDocumentController.s == 2) {
-                    if (!url.equals(imgVerde) && !url.equals(imgAmarelo)) {
+                    if (!url.equals(imgVerde) && !url.equals(imgAmarelo) && Controller.getInstance().adicionarObstaculo(posX, posY) == 1) {
                         setImgVermelho();
                         nivel = 3;
                         setLayoutX(getPosX() * 40);
                         setLayoutY(getPosY() * 40);
                         setFitWidth(40);
                         setFitHeight(40);
-                        Controller.getInstance().adicionarObstaculo(posX, posY);
                     }
                 } else if (FXMLDocumentController.s == 3) {
                     if (!url.equals(imgVerde) && !url.equals(imgAmarelo)) {

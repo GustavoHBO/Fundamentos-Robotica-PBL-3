@@ -30,7 +30,8 @@ public class Controller {
     
     /* Definições */
     private final int ESPACO = 1; // Espaço entre os vertices.
-    private final int TTOTAL = 20; // Tamanho total do mapa.
+    private final int TTOTALX = 20; // Tamanho total do mapa.
+    private final int TTOTALY = 20; // Tamanho total do mapa.
     
     /* Grafo de obstáculos */
     private Grafo grafoObstaculos;
@@ -73,10 +74,27 @@ public class Controller {
     }
                             /* End Singleton */
     
-    public void adicionarObstaculo(int x, int y) {
-        if (buscarPonto(x, y, grafoObstaculos) == null) {
+    public int adicionarObstaculo(int x, int y) {
+        if (buscarPonto(x - 1, y - 1, grafoObstaculos) != null) {
+            return 0;
+        } else if(buscarPonto(x, y - 1, grafoObstaculos) != null){
+            return 0;
+        } else if(buscarPonto(x + 1, y - 1, grafoObstaculos) != null){
+            return 0;
+        } else if(buscarPonto(x - 1, y, grafoObstaculos) != null){
+            return 0;
+        } else if(buscarPonto(x + 1, y, grafoObstaculos) != null){
+            return 0;
+        } else if(buscarPonto(x - 1, y + 1, grafoObstaculos) != null){
+            return 0;
+        } else if(buscarPonto(x, y + 1, grafoObstaculos) != null){
+            return 0;
+        } else if(buscarPonto(x + 1, y + 1, grafoObstaculos) != null){
+            return 0;
+        } else if (buscarPonto(x, y, grafoObstaculos) == null) {
             grafoObstaculos.inserir(new Ponto(x, y, true));
         }
+        return 1;
     }
     
     public void removerObstaculo(int x, int y){
@@ -143,7 +161,7 @@ public class Controller {
             for (int j = 0; j < 3; j++) { // Quantidade de pontos na horizontal.
                 p = buscarPonto(x-1 + j, y-1 + i, grafoExpandido); // Verifica se o ponto já foi criado anteriormente.(Evitar pontos iguais).
                 if( p == null && x-1 + j >= 0 && y-1 + i >= 0){ // Verifica se existe o ponto e se ele ultrapassa a margem superior ou esquerda.
-                    if (x-1 + j < TTOTAL && y-1 + i < TTOTAL) { // Verifica se o ponto ultrapassa a margem inferior ou direita.
+                    if (x-1 + j < TTOTALX && y-1 + i < TTOTALY) { // Verifica se o ponto ultrapassa a margem inferior ou direita.
                         if ((buscarPonto(x - 1 + j, y - 1 + i, grafoObstaculos) == null)) { // Verifica se o ponto vai ser criado em cima de um obstáculo.
                             grafoExpandido.inserir(new Ponto(x - 1 + j, y - 1 + i, false)); // Cria o ponto.
                         }

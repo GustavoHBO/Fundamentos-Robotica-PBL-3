@@ -9,8 +9,6 @@ import controller.Controller;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,7 +16,6 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import model.Circulo;
 import util.Grafo;
-import util.Vertice;
 
 /**
  *
