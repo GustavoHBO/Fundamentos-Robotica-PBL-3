@@ -24,8 +24,8 @@ public class Grafo{
 
     private int numVertices;
     private int numArestas;
-    private List<Vertice> listaVertices;
-    private List<Aresta> listaArestas;
+    private final List<Vertice> listaVertices;
+    private final List<Aresta> listaArestas;
 
     /*______________________________________________________________________________________________________________________________*/
     /**
@@ -34,8 +34,8 @@ public class Grafo{
     public Grafo(){
             numVertices = 0;
             numArestas = 0;
-            listaVertices = new ArrayList<Vertice>();
-            listaArestas = new ArrayList<Aresta>();
+            listaVertices = new ArrayList<>();
+            listaArestas = new ArrayList<>();
     }
 
     /*______________________________________________________________________________________________________________________________*/
@@ -59,7 +59,7 @@ public class Grafo{
     /*______________________________________________________________________________________________________________________________*/
     /**
      * Método para retorno dos vértices do grafo
-     * @return List<Vertice> - Lista de todos os vértices do grafo
+     * @return listaVertices - Lista de todos os vértices do grafo
      */
     public List<Vertice> getVertices(){
             return listaVertices;
@@ -68,7 +68,7 @@ public class Grafo{
     /*______________________________________________________________________________________________________________________________*/
     /**
      * Método para retorno das arestas do grafo
-     * @return List<Aresta> - Lista de todas as arestas do grafo
+     * @return listaArestas - Lista de todas as arestas do grafo
      */
     public List<Aresta> getArestas(){
             return listaArestas;
@@ -77,7 +77,7 @@ public class Grafo{
     /*______________________________________________________________________________________________________________________________*/
     /**
      * Insere o vértice a partir do objeto do vértice.
-     * @param Object - Objeto inserido
+     * @param o - Objeto inserido
      * @return Vertice - O vértice com o objeto inserido
      */
     public Vertice inserir(Object o) {
@@ -94,11 +94,11 @@ public class Grafo{
     /*______________________________________________________________________________________________________________________________*/
     /**
      * Método para inserir uma aresta orientada
-     * @param Vertice - Vértice de origem
-     * @param Vertice - Vértice de destino
-     * @param int - Peso da aresta
+     * @param v - Vértice de origem
+     * @param w - Vértice de destino
+     * @param peso - Peso da aresta
      */
-    public void inserirAresta(Vertice v, Vertice w, int peso) {
+    public void inserirAresta(Vertice v, Vertice w, double peso) {
         Iterator<Aresta> it = listaArestas.iterator();
         Aresta a;
         if (v == null || w == null) {
@@ -120,33 +120,33 @@ public class Grafo{
     /*______________________________________________________________________________________________________________________________*/
     /**
      * Inserir no grafouma aresta não orientada
-     * @param Vertice - Vértice
-     * @param Vertice - Vértice
-     * @param int - Peso da aresta
+     * @param v - Vertice 1.
+     * @param w - Vértice 2.
+     * @param peso - Peso do caminho entre os dois.
      */
-    public void inserirArestaNaoOrientada(Vertice v, Vertice w, int peso) {
+    public void inserirArestaNaoOrientada(Vertice v, Vertice w, double peso) {
             inserirAresta(v , w , peso);
             inserirAresta(w , v , peso);
     }
 
     /*______________________________________________________________________________________________________________________________*/
     /**
-     * Remove a aresta
-     * @param Aresta - Aresta do grafo
+     * Remove a aresta.
+     * @param a - Aresta do grafo.
      */
     public void removerAresta(Aresta a) {
-            Aresta aresta = buscarAresta(a.getVertice1(), a.getVertice2());
-            if(aresta != null){
-                    listaArestas.remove(aresta);
-            }
+        Aresta aresta = buscarAresta(a.getVertice1(), a.getVertice2());
+        if (aresta != null) {
+            listaArestas.remove(aresta);
+        }
 
     }
 
     /*______________________________________________________________________________________________________________________________*/
     /**
      * Remove o vértice a partir do objeto do vértice.
-     * @param Object - Objeto do vértice a ser removido.
-     * @return Vertice - Vértice removido || null - Caso o vértice não seja encontrado.
+     * @param o - Objeto do vértice a ser removido.
+     * @return vertice - Vértice removido || null - Caso o vértice não seja encontrado.
      */
     public Vertice removerVertice(Object o){
             Iterator<Aresta> it = listaArestas.iterator();
@@ -156,7 +156,7 @@ public class Grafo{
             if(vertice == null){
                     return null;
             }
-            Aresta aresta = null;
+            Aresta aresta;
             while(it.hasNext()){
                     aresta = it.next();
                     if(aresta.getVertice1().equals(vertice) || aresta.getVertice2().equals(vertice)){
@@ -170,12 +170,12 @@ public class Grafo{
     /*______________________________________________________________________________________________________________________________*/
     /**
      * Busca o vértice a partir do objeto armazenado nele.
-     * @param Object - Objeto do vértice procurado.
-     * @return Vertice - Vértice procurado | null - Caso o vértice não seja encontrado.
+     * @param objeto - Objeto do vértice procurado.
+     * @return vertice - Vértice procurado | null - Caso o vértice não seja encontrado.
      */
     public Vertice buscarVertice(Object objeto){
             Iterator<Vertice> it = listaVertices.iterator();
-            Vertice vertice = null;
+            Vertice vertice;
             while(it.hasNext()){
                     vertice = it.next();
                     if(vertice.getObjeto().equals(objeto)){
@@ -188,13 +188,13 @@ public class Grafo{
     /*______________________________________________________________________________________________________________________________*/
     /**
      * Busca a aresta a partir dos vértices que determinam o inicio e fim da aresta.
-     * @param Vertice - Vértice origem da aresta.
-     * @param Vertice - Vértice destino da aresta.
+     * @param vertice1 - Vértice origem da aresta.
+     * @param vertice2 - Vértice destino da aresta.
      * @return Aresta - Aresta procurada || null - Caso a aresta não seja encontrada.
      */
     public Aresta buscarAresta(Vertice vertice1, Vertice vertice2) {
         Iterator<Aresta> it = listaArestas.iterator();
-        Aresta aresta = null;
+        Aresta aresta;
         while (it.hasNext()) {
             aresta = it.next();
             if (aresta.getVertice1().equals(vertice1) && aresta.getVertice2().equals(vertice2)) {
@@ -207,24 +207,24 @@ public class Grafo{
     /*______________________________________________________________________________________________________________________________*/
     /**
      * Retorna uma lista de todas as aresta incidentes no vértice encontrado.
-     * @param String - Nome do vértice.
-     * @return List<Aresta> - Todas as arestas incidentes no vértice encontrado.
+     * @param nome - Nome do vértice.
+     * @return arestasIncidentes - Todas as arestas incidentes no vértice encontrado.
      */
-    public List<Aresta> arestasIncidentes(String nome){
-            List<Aresta> arestasIncidentes = new ArrayList<Aresta>();
-            Iterator<Aresta> it = listaArestas.iterator();
-            Aresta aresta = null;
+    public List<Aresta> arestasIncidentes(String nome) {
+        List<Aresta> arestasIncidentes = new ArrayList<>();
+        Iterator<Aresta> it = listaArestas.iterator();
+        Aresta aresta;
 
-            while(it.hasNext()){
-                    aresta = it.next();
-                    if(aresta.getVertice1().getObjeto().equals(nome) || aresta.getVertice2().getObjeto().equals(nome)){
-                            arestasIncidentes.add(aresta);
-                    }
+        while (it.hasNext()) {
+            aresta = it.next();
+            if (aresta.getVertice1().getObjeto().equals(nome) || aresta.getVertice2().getObjeto().equals(nome)) {
+                arestasIncidentes.add(aresta);
             }
-            if(arestasIncidentes.size() == 0){
-                    return null;
-            }
-            return arestasIncidentes;
+        }
+        if (arestasIncidentes.isEmpty()) {
+            return null;
+        }
+        return arestasIncidentes;
     }
 
     /*______________________________________________________________________________________________________________________________*/
