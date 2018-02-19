@@ -150,7 +150,7 @@ public class Controller {
     }
     
     /**
-     * Cria pontos em volta do obstáculo no grafo expnadido.
+     * Cria pontos em volta do obstáculo no grafo expandido.
      * @param x - Coordenada X do ponto em questão.
      * @param y - Coordenada Y do ponto em questão.
      */

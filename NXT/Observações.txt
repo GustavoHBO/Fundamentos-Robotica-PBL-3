@@ -1,0 +1,2 @@
+ - No trajetória do caminho, não mandar executar movimentos maiores que 1580 cm.
+ - 
