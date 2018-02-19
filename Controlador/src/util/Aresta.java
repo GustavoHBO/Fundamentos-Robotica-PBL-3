@@ -24,7 +24,7 @@ public class Aresta {
 
 	private Vertice vertice1 = null;
 	private Vertice vertice2 = null;
-	private int peso = 0;
+	private double peso = 0;
 	
 	/*______________________________________________________________________________________________________________________________*/
 	/**
@@ -76,18 +76,18 @@ public class Aresta {
 	/*______________________________________________________________________________________________________________________________*/
 	/**
 	 * Retorna o valor peso da aresta.
-	 * @return int - Peso da aresta.
+	 * @return double - Peso da aresta.
 	 */
-	public int getPeso() {
+	public double getPeso() {
 		return peso;
 	}
 	
 	/*______________________________________________________________________________________________________________________________*/
 	/**
 	 * Altera o valor peso da aresta.
-	 * @param int - Novo valor peso da aresta.
+	 * @param double - Novo valor peso da aresta.
 	 */
-	public void setPeso(int peso) {
+	public void setPeso(double peso) {
 		this.peso = peso;
 	}
 	/*______________________________________________________________________________________________________________________________*/

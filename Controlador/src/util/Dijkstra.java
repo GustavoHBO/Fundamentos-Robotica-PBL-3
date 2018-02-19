@@ -36,7 +36,7 @@ public class Dijkstra {
 	private Set<Vertice> nosVisitados;
 	private Set<Vertice> nosNaoVisitados;
 	private Map<Vertice, ArrayList<Vertice>> antecessores;
-	private Map<Vertice, Integer> peso;
+	private Map<Vertice, Double> peso;
 
 	/*______________________________________________________________________________________________________________________________*/
 	/**
@@ -56,9 +56,9 @@ public class Dijkstra {
 		listaResultados = new ArrayList<List<Vertice>>();
 		nosVisitados = new HashSet<Vertice>();
 		nosNaoVisitados = new HashSet<Vertice>();
-		peso = new HashMap<Vertice, Integer>();
+		peso = new HashMap<Vertice, Double>();
 		antecessores = new HashMap<Vertice, ArrayList<Vertice>>();
-		peso.put(raiz, 0);
+		peso.put(raiz, 0.0);
 		nosNaoVisitados.add(raiz);
 		while (nosNaoVisitados.size() > 0) {
 			Vertice no = getVertMenorDistancia(nosNaoVisitados);
@@ -95,9 +95,9 @@ public class Dijkstra {
 	 * Método para retorno do peso da aresta entre nós adjacentes
 	 * @param Vertice - Nó do grafo
 	 * @param Vertice - Nó do grafo
-	 * @return int - Peso da aresta.
+	 * @return double - Peso da aresta.
 	 */
-	private int getDistancia(Vertice no, Vertice no2) {
+	private double getDistancia(Vertice no, Vertice no2) {
 		for (Aresta aresta : arestas) {
 			if (aresta.getVertice1().equals(no)
 					&& aresta.getVertice2().equals(no2)) {
@@ -157,12 +157,12 @@ public class Dijkstra {
 	/**
 	 * Retorna o valor da menor distância já calculada
 	 * @param Vertice - Vértice do grafo
-	 * @return int - Peso da aresta.
+	 * @return double - Peso da aresta.
 	 */
-	private int getMenorDistancia(Vertice vertice) {
-		Integer d = peso.get(vertice);
+	private double getMenorDistancia(Vertice vertice) {
+		Double d = peso.get(vertice);
 		if (d == null) {
-			return Integer.MAX_VALUE;
+			return Double.MAX_VALUE;
 		} else {
 			return d;
 		}
