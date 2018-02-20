@@ -17,8 +17,10 @@
 package controller;
 
 import java.util.Iterator;
+import java.util.List;
 import model.Ponto;
 import util.Aresta;
+import util.Dijkstra;
 import util.Grafo;
 import util.Vertice;
 
@@ -43,6 +45,10 @@ public class Controller {
     private Grafo grafoVisibilidade;
     
     private static Controller controller; // Declaração do Controller.
+    
+    /* Variáveis */
+    private Ponto pInicio = null;
+    private Ponto pFim = null;
     
     /* Design Pattern Singleton */
     
@@ -123,8 +129,8 @@ public class Controller {
                 }
             }
         }
-        System.out.println("Quantidade de pontos: " + grafoExpandido.getVertices().size());
-        exibirPontos(grafoExpandido);
+        //System.out.println("Quantidade de pontos: " + grafoExpandido.getVertices().size());
+        //exibirPontos(grafoExpandido);
         montarGrafoVisibilidade(grafoExpandido);
     }
     
@@ -217,12 +223,12 @@ public class Controller {
                 } else {
                     v2 = buscarVertice(pA.getX(), pA.getY(), grafoVisibilidade);
                     v3 = buscarVertice(pA2.getX(), pA2.getY(), grafoVisibilidade);
-                    grafoVisibilidade.inserirAresta(v2, v3, ESPACO);
+                    grafoVisibilidade.inserirAresta(v2, v3, calcularDistancia(pA, pA2));
                 }
             } else {
                 if (pD != null) {
                     v3 = buscarVertice(pD.getX(), pD.getY(), grafoVisibilidade);
-                    grafoVisibilidade.inserirAresta(v2, v3, ESPACO);
+                    grafoVisibilidade.inserirAresta(v2, v3, calcularDistancia(pE, pD));
                 }
                 pC = buscarVisinhoCima(p.getX(), p.getY(), grafo);
                 if (pC == null) {
@@ -238,14 +244,90 @@ public class Controller {
                 }
                 if (pC.getX() != pB.getX() || pC.getY() != pB.getY()) {
                     v3 = buscarVertice(pB.getX(), pB.getY(), grafoVisibilidade);
-                    grafoVisibilidade.inserirAresta(v2, v3, ESPACO);
+                    grafoVisibilidade.inserirAresta(v2, v3, calcularDistancia(pC, pB));
                 }
             }
         }
-        System.out.println("Quantidade de Vertices do grafo de visibilidade: " + grafoVisibilidade.getVertices().size());
-        System.out.println("Quantidade de arestas do grafo de visibilidade: " + grafoVisibilidade.getArestas().size());
-        exibirPontos(grafoVisibilidade);
-        exibirArestas(grafoVisibilidade);
+//        System.out.println("Quantidade de Vertices do grafo de visibilidade: " + grafoVisibilidade.getVertices().size());
+//        System.out.println("Quantidade de arestas do grafo de visibilidade: " + grafoVisibilidade.getArestas().size());
+//        exibirPontos(grafoVisibilidade);
+//        exibirArestas(grafoVisibilidade);
+        
+        Grafo grafoLigacao = gerarGrafoDeLigacao(grafoVisibilidade, pInicio, pFim);
+        exibirCaminho(grafoLigacao, buscarVertice(pInicio.getX(), pInicio.getY(), grafoLigacao), buscarVertice(pFim.getX(), pFim.getY(), grafoLigacao));
+    }
+    
+    private Grafo gerarGrafoDeLigacao(Grafo grafo, Ponto pInicio, Ponto pFim){
+        Grafo grafoLigacao = new Grafo();
+        Vertice v1, v2;
+        Aresta a;
+        Ponto p1, p2;
+        Iterator<Aresta> it = grafo.getArestas().iterator();
+        Iterator<Vertice> itV, itV2;
+        grafoLigacao.inserir(pInicio);
+        grafoLigacao.inserir(pFim);
+        
+        while(it.hasNext()){
+            a = it.next();
+            p1 = (Ponto) a.getVertice1().getObjeto();
+            v1 = buscarVertice(p1.getX(), p1.getY(), grafoLigacao);
+            if(v1 == null){ // Antes de adicionar verifico se o ponto já foi inserido, para que a referência das arestas incidentes neste ponto seja a mesma.
+                v1 = grafoLigacao.inserir(p1);
+            }
+            p2 = (Ponto) a.getVertice2().getObjeto();
+            v2 = buscarVertice(p2.getX(), p2.getY(), grafoLigacao);
+            if(v2 == null){// Antes de adicionar verifico se o ponto já foi inserido, para que a referência das arestas incidentes neste ponto seja a mesma.
+                v1 = grafoLigacao.inserir(p2);
+            }
+            grafoLigacao.inserirArestaNaoOrientada(v1, v2, calcularDistancia(p1, p2)); // Cria a aresta entre os dois vértices.
+        }
+        
+        itV = grafoLigacao.getVertices().iterator();
+        itV2 = grafoLigacao.getVertices().iterator();
+        
+        while(itV.hasNext()){
+            v1 = itV.next();
+            p1 = (Ponto) v1.getObjeto();
+            while(itV2.hasNext()){
+                v2 = itV2.next();
+                p2 = (Ponto) v2.getObjeto();
+                if(temVisibilidade(grafoLigacao, v1, v2)){
+                    grafoLigacao.inserirArestaNaoOrientada(v1, v2, calcularDistancia(p1, p2));
+                }
+            }
+        }
+        
+        exibirPontos(grafoLigacao);
+        exibirArestas(grafoLigacao);
+        
+        return grafoLigacao;
+    }
+    
+    private boolean temVisibilidade(Grafo grafo, Vertice v1, Vertice v2){
+        Ponto p1, p2, pAux = null;
+        p1 = (Ponto) v1.getObjeto();
+        p2 = (Ponto) v2.getObjeto();
+        
+        while(p1.getX() != p2.getX() && p1.getY() != p2.getY() && pAux == null){
+            if(p1.getX() > p2.getX()){
+                
+            }
+        }
+        return false;
+    }
+    
+    private boolean viavel(Grafo grafo, Ponto p1, Ponto p2) {
+        Ponto pAux = null;
+
+        if (p1.getX() < p2.getX()) {
+            pAux = buscarPonto(p2.getX() - 1, p2.getY(), grafo);
+            if(pAux != null){
+                return false;
+            } else if (p1.getY() < pAux.getY()){
+                pAux = buscarPonto(pAux.getX(), pAux.getY() - 1, grafo);
+            }
+        }
+        return false;
     }
     
     private Ponto buscarVisinhoDireita(int x, int y, Grafo grafo) {
@@ -322,6 +404,42 @@ public class Controller {
         return null;
     }
     
+    private double calcularDistancia(Ponto a, Ponto b){
+        return (Math.sqrt((a.getX() - b.getX()) * (a.getX() - b.getX()) +(a.getY() - b.getY()) * (a.getY() - b.getY()) ));
+    }
+    
+    /**
+     * @return the pInicio
+     */
+    public Ponto getpInicio() {
+        return pInicio;
+    }
+
+    /**
+     * Altera o ponto de início.
+     * @param x - Posição X do novo ponto.
+     * @param y - Posição Y do novo ponto.
+     */
+    public void setpInicio(int x, int y) {
+        this.pInicio = new Ponto(x, y, false);
+    }
+
+    /**
+     * @return the pFim
+     */
+    public Ponto getpFim() {
+        return pFim;
+    }
+
+    /**
+     * Altera o ponto final.
+     * @param x - Posição X do novo ponto.
+     * @param y - Posição Y do novo ponto.
+     */
+    public void setpFim(int x, int y) {
+        this.pFim = new Ponto(x, y, false);
+    }
+    
     public void exibirPontos(Grafo grafo){
         Vertice v = null;
         Ponto p = null;
@@ -342,6 +460,52 @@ public class Controller {
             p1 = (Ponto) a.getVertice1().getObjeto();
             p2 = (Ponto) a.getVertice2().getObjeto();
             System.out.println("Ponto (" + p1.getX() + "," + p1.getY() + ") - (" + p2.getX() + "," + p2.getY() + ")");
+        }
+    }
+    
+    private void exibirCaminho(Grafo grafo, Vertice inicio, Vertice fim) {
+        Dijkstra operador = new Dijkstra(grafo);
+        operador.executar(inicio);
+        List<List<Vertice>> caminhos = operador.getCaminho(null, fim);
+        if (caminhos == null) {
+            System.out.println("Não existe caminhos");
+            return;
+        }
+        Iterator<List<Vertice>> it = caminhos.iterator();
+        Iterator<Vertice> it2;
+        Ponto p;
+        int i = 0;
+        if (!it.hasNext()) {
+            System.out.println("Não existe caminhos");
+        } else {
+            while (it.hasNext()) {
+                List<Vertice> next = it.next();
+                it2 = next.iterator();
+                System.out.println("Caminho " + ++i);
+                while (it2.hasNext()) {
+                    Vertice next1 = it2.next();
+                    p = (Ponto) next1.getObjeto();
+                    System.out.print("(" + p.getX() + "," + p.getY() + ") ");
+                }
+                System.out.println("");
+            }
+        }
+    }
+    
+    private void exibirProtocoloCaminho(List<Vertice> caminho){
+        String protocolo = "#" + (caminho.size() - 1);
+        protocolo += "00-00-";
+        Vertice v1 = null, v2 = null;
+        Ponto p1 = null, p2 = null, p3 = null;
+        double dist = 0;
+        for (Vertice vertice : caminho) {
+            if(v1 == null){
+                v1 = vertice;
+            } else {
+                p1 = (Ponto) v1.getObjeto();
+                p2 = (Ponto) vertice.getObjeto();
+                p3 = new Ponto(p1.getX(), p2.getY(), false);
+            }
         }
     }
 }

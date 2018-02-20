@@ -86,11 +86,13 @@ public class Circulo extends ImageView{
                 if (FXMLDocumentController.s == 0) {
                     setImgVerde();
                     nivel = 1;
+                    Controller.getInstance().setpInicio(posX, posY);
                     FXMLDocumentController.s++;
                 } else if (FXMLDocumentController.s == 1) {
                     if (!url.equals(imgVerde)) {
                         setImgAmarelo();
                         nivel = 2;
+                        Controller.getInstance().setpFim(posX, posY);
                         FXMLDocumentController.s++;
                     }
                 } else if (FXMLDocumentController.s == 2) {
@@ -120,25 +122,40 @@ public class Circulo extends ImageView{
         this.setImage(new Image(url));
     }
     
+    /**
+     * Altera a imagem do ponto para preta.
+     */
     public void setImgPreta(){
         url = imgPreta;
         setImg(url);
     }
     
+    /**
+     * Altera a imagem do ponto para cinza.
+     */
     public void setImgCinza(){
         setImg(imgCinza);
     }
     
+    /**
+     * Altera a imagem do ponto para verde.
+     */
     public void setImgVerde(){
         url = imgVerde;
         setImg(url);
     }
     
+    /**
+     * Altera a imagem do ponto para amarelo.
+     */
     public void setImgAmarelo(){
         url = imgAmarelo;
         setImg(url);
     }
     
+    /**
+     * Altera a imagem do ponto para vermelho.
+     */
     public void setImgVermelho(){
         url = imgVermelho;
         setImg(url);

@@ -8,7 +8,6 @@ package controlador;
 import controller.Controller;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -43,8 +42,7 @@ public class FXMLDocumentController implements Initializable {
     
     /* Demais variáveis de controle */
     
-    /* Grafo de visibilidade */
-    
+    /* Grafo de pontos */
     private Grafo grafo;
     
     /* Váriáveis finais, para controle do mapa */
@@ -65,16 +63,25 @@ public class FXMLDocumentController implements Initializable {
     
     /* Métodos de eventos */
     
+    /**
+     * Evento para ativar a possibilidade de retirar um obstáculo.
+     */
     @FXML
     private void eventButtonNada(){
         s = 3;
     }
     
+    /**
+     * Evento para ativar a possibilidade de tornar um ponto um obstáculo.
+     */
     @FXML
     private void eventButtonObstaculo(){
         s = 2;
     }
     
+    /**
+     * Evento no qual calculo o melhor caminho entre o ponto de início e de fim.
+     */
     @FXML
     private void eventCalcularCaminho(){
         Controller.getInstance().expandirObstaculos();
