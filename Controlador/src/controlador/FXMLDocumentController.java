@@ -8,9 +8,6 @@ package controlador;
 import controller.Controller;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,7 +15,6 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import model.Circulo;
 import util.Grafo;
-import util.Vertice;
 
 /**
  *
@@ -46,14 +42,14 @@ public class FXMLDocumentController implements Initializable {
     
     /* Demais variáveis de controle */
     
-    /* Grafo de visibilidade */
-    
+    /* Grafo de pontos */
     private Grafo grafo;
     
     /* Váriáveis finais, para controle do mapa */
     
-    private final int QTNVV = 10; // Quantidade de vértices na vertical.
-    private final int QTNVH = 10; // Quantidade de vértices na horizontal.
+    private final int QTNVV = 20; // Quantidade de vértices na vertical.
+    private final int QTNVH = 20; // Quantidade de vértices na horizontal.
+    private final int ESPACOBORDA = 10; // Espaço entre a borda de os circulos..
     private final int PESO = 1; // Peso entre os vértices.
     
     public static int s = 0; // Determina o modo de interação dos circulos, 0 para inicio, 1 para fim, 2 para obstáculo e 3 para nada.
@@ -67,16 +63,25 @@ public class FXMLDocumentController implements Initializable {
     
     /* Métodos de eventos */
     
+    /**
+     * Evento para ativar a possibilidade de retirar um obstáculo.
+     */
     @FXML
     private void eventButtonNada(){
         s = 3;
     }
     
+    /**
+     * Evento para ativar a possibilidade de tornar um ponto um obstáculo.
+     */
     @FXML
     private void eventButtonObstaculo(){
         s = 2;
     }
     
+    /**
+     * Evento no qual calculo o melhor caminho entre o ponto de início e de fim.
+     */
     @FXML
     private void eventCalcularCaminho(){
         Controller.getInstance().expandirObstaculos();
@@ -94,10 +99,10 @@ public class FXMLDocumentController implements Initializable {
         int j = 0;
         
         int espacoX = 0;
-        int espacoY = QTNVV;
+        int espacoY = ESPACOBORDA;
         
         for (i = 0; i < QTNVV; i++) {
-            espacoX = QTNVH;
+            espacoX = ESPACOBORDA;
             for (j = 0; j < QTNVH; j++) {
                 c = new Circulo();
                 listaCirculos.add(c);

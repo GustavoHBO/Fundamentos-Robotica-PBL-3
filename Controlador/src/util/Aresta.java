@@ -24,7 +24,7 @@ public class Aresta {
 
 	private Vertice vertice1 = null;
 	private Vertice vertice2 = null;
-	private int peso = 0;
+	private double peso = 0;
 	
 	/*______________________________________________________________________________________________________________________________*/
 	/**
@@ -49,7 +49,7 @@ public class Aresta {
 	/*______________________________________________________________________________________________________________________________*/
 	/**
 	 * Altera o vértice de destino da aresta.
-	 * @param Vertice - Novo vértice de destino da aresta.
+	 * @param vertice2 - Novo vértice de destino da aresta.
 	 */
 	public void setVertice2(Vertice vertice2) {
 		this.vertice2 = vertice2;
@@ -67,7 +67,7 @@ public class Aresta {
 	/*______________________________________________________________________________________________________________________________*/
 	/**
 	 * Altera o vértice de origem da aresta.
-	 * @param Vertice - Novo vértice de origem da aresta.
+	 * @param vertice1 - Novo vértice de origem da aresta.
 	 */
 	public void setVertice1(Vertice vertice1) {
 		this.vertice1 = vertice1;
@@ -76,18 +76,18 @@ public class Aresta {
 	/*______________________________________________________________________________________________________________________________*/
 	/**
 	 * Retorna o valor peso da aresta.
-	 * @return int - Peso da aresta.
+	 * @return double - Peso da aresta.
 	 */
-	public int getPeso() {
+	public double getPeso() {
 		return peso;
 	}
 	
 	/*______________________________________________________________________________________________________________________________*/
 	/**
 	 * Altera o valor peso da aresta.
-	 * @param int - Novo valor peso da aresta.
+	 * @param peso - Novo valor peso da aresta.
 	 */
-	public void setPeso(int peso) {
+	public void setPeso(double peso) {
 		this.peso = peso;
 	}
 	/*______________________________________________________________________________________________________________________________*/
