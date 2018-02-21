@@ -1,4 +1,12 @@
-[cIdA][qtnP][qtnR][qtnC][qntG][ld][cF]
+
+Este protocolo define e padroniza o formato de comunicação do programa supervisor e do robô alvo(NXT).
+
+Contexto: Como o supervisor até então deve planejar a rota por meio de uma interface, ao qual, deverá ser formatada de acordo com o seguinte protocolo.
+O protocolo define apenas três operações, envio de rota planejada, envio da autorização de início e envio de parada total(caso em movimento).
+
+O seguinte protocolo, estabelece a estrutura da comunicação supervisor -> robô.
+
+[cIdA][qtnP]{[qtnR][qtnC][qntG][ld]}[cF] - Padrão de rota planejada(o código entre chaves pode se repetir até 30 vezes, totalizando um pacote máximo de 123 bytes).
 
 cIdA - Caractere identificador de caminho(0x23).
 qtnP - Quantidade de passos da trajetoria.
@@ -12,6 +20,32 @@ cF - Caractere de fim de caminho(0xFF).
 
 cIdI - Caractere identificador de inicio(0x40).
 
+[cIdF] 
+
+cIdF - Caractere identificador de fim(0xFF).
+
+
+O seguinte protocolo, estabelece a estrutura da comunicação robô -> supervisor.
+
+Contexto: O supervisor deve a todo momento mostrar a posição do robô na interface, com isso é importante que o robô notifique a posição atual em relação ao mapa.
+Esse feedback será feito utilizando os parâmetros de controle de movimentação presentes no robô.
+
+[cIdM][cIdD][qtnCR][qtnCM][cIdF] - Padrão para movimentações em linha reta.
+
+cIdM - Caractere identificador de movimento(0x23).
+cIdD - Caractere identificador de deslocamento.
+qtnCR - Quantidade de ciclos da roda do robô.
+qtnCM - Quantidade de click's do motor.
+cIdF - Caractere identificador de fim(0xFF).
+
+[cIdM][cIdR][qtnCR][qtnCM][cIdF] - Padrão para movimentações em torno do próprio eixo(giro).
+
+cIdM - Caractere identificador de movimento(0x23).
+cIdR - Caractere identificador de rotação.
+qtnCR - Quantidade de ciclos da roda do robô.
+qtnCM - Quantidade de click's do motor.
+cIdF - Caractere identificador de fim(0xFF).
 
 Definições:
 	- Valores maiores que 250(0xFA), o 255(0xFF) está sendo utilizado como fim do movimento.
+	- Este protocolo permite que o robô possa transitar até 135 metros.
