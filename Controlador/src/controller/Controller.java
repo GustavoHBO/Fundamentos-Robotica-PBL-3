@@ -16,6 +16,7 @@
  */
 package controller;
 
+import java.awt.geom.Line2D;
 import java.util.Iterator;
 import java.util.List;
 import model.Ponto;
@@ -48,7 +49,7 @@ public class Controller {
     private Ponto pInicio = null;
     private Ponto pFim = null;
 
-    /* Design Pattern Singleton */
+                                            /* Design Pattern Singleton */
     /**
      * The constructor is private for use the singleton
      */
@@ -76,7 +77,9 @@ public class Controller {
         controller = null;
     }
 
-    /* End Singleton */
+                                                        /* End Singleton */
+    
+    /*============================================================ MÉTODOS PÚBLICOS ==========================================================*/
     
     /**
      * Método de adicionar obstáculo. Adiciona um obstáculo no grafo de obstáculos(grafoObstaculos). Porém, antes é verificado se existe
@@ -115,7 +118,86 @@ public class Controller {
             grafoObstaculos.removerVertice(p); // Caso exista o ponto é removido.
         }
     }
+    
+    public boolean calcularCaminho(){
+        Grafo grafoExpandido = expandirObstaculos();
+        Ponto pontoInicio, pontoFim;
+        Vertice v1, v2;
+        
+        pontoInicio = getpInicio();
+        pontoFim = getpFim();
+        
+        if(pontoInicio == null || pontoFim == null){// Caso o ponto de início ou fim não tenha sido definido.
+            return false;
+        } else {
+            v1 = inserirPonto(pontoInicio, grafoExpandido);
+            v2 = inserirPonto(pontoFim, grafoExpandido);
+            criarGrafoVisibilidade(grafoExpandido);
+            exibirPontos(grafoExpandido);
+            exibirArestas(grafoExpandido);
+        }
+        return true;
+    }
+    
+    /**
+     * @return the pInicio
+     */
+    public Ponto getpInicio() {
+        return pInicio;
+    }
 
+    /**
+     * Altera o ponto de início.
+     *
+     * @param x - Posição X do novo ponto.
+     * @param y - Posição Y do novo ponto.
+     */
+    public void setpInicio(int x, int y) {
+        this.pInicio = new Ponto(x, y, false);
+    }
+
+    /**
+     * @return the pFim
+     */
+    public Ponto getpFim() {
+        return pFim;
+    }
+
+    /**
+     * Altera o ponto final.
+     *
+     * @param x - Posição X do novo ponto.
+     * @param y - Posição Y do novo ponto.
+     */
+    public void setpFim(int x, int y) {
+        this.pFim = new Ponto(x, y, false);
+    }
+
+    public void exibirPontos(Grafo grafo) {
+        Vertice v;
+        Ponto p;
+        Iterator<Vertice> it = grafo.getVertices().iterator();
+        while (it.hasNext()) {
+            v = it.next();
+            p = (Ponto) v.getObjeto();
+            System.out.println("Ponto(" + p.getX() + "," + p.getY() + ")");
+        }
+    }
+
+    public void exibirArestas(Grafo grafo) {
+        Aresta a;
+        Ponto p1, p2;
+        Iterator<Aresta> it = grafo.getArestas().iterator();
+        while (it.hasNext()) {
+            a = it.next();
+            p1 = (Ponto) a.getVertice1().getObjeto();
+            p2 = (Ponto) a.getVertice2().getObjeto();
+            System.out.println("Ponto (" + p1.getX() + "," + p1.getY() + ") - (" + p2.getX() + "," + p2.getY() + ")");
+        }
+    }
+    
+    /*============================================================ MÉTODOS PRIVADOS ==========================================================*/
+    
     /**
      * Método para criação de pontos no grafo determinado. Cria o ponto utilizando os parâmetros recebidos e retorna-o. Caso o ponto
      * já exista ele é retornado, se o ponto exceder os limites do plano ele não é adicionado.
@@ -178,7 +260,7 @@ public class Controller {
      * e cria as arestas entre os vértices dos mesmos.
      * @return null - Caso o grafo de obstáculos seja inválido, grafoEx - Grafo de expansão.
      */
-    public Grafo expandirObstaculos() {
+    private Grafo expandirObstaculos() {
         
         /*
         Este método analisa os pontos em volta do ponto obstáculo do grafo de obstáculos(grafoObstaculos). Começando do primeiro ponto na diagonal
@@ -234,9 +316,41 @@ public class Controller {
                     }
                 }
             }
-            exibirPontos(grafoEx);
-            exibirArestas(grafoEx);
+            //exibirPontos(grafoEx);
+            //exibirArestas(grafoEx);
             return grafoEx;
+        }
+    }
+    
+    private void criarGrafoVisibilidade(Grafo g) {
+        Iterator<Vertice> it;
+        Vertice vP1, vP2; // Vértice do ponto 1 e ponto 2.
+        Ponto p1, p2, p3, p4;
+        if (g == null) {// Caso o grafo sejá inválido.
+            return;
+        } else {
+            for (Vertice v1 : g.getVertices()) {
+                for (Vertice v2 : g.getVertices()) {
+                    p1 = null;
+                    p2 = null;
+                    p3 = null;
+                    p4 = null;
+                    for (Aresta a1 : g.getArestas()) {
+                        p1 = (Ponto) v1.getObjeto();
+                        p2 = (Ponto) v2.getObjeto();
+                        p3 = (Ponto) a1.getVertice1().getObjeto();
+                        p4 = (Ponto) a1.getVertice2().getObjeto();
+                        if (temIntersecao(p1, p2, p3, p4)) {
+                            break;
+                        }
+                    }
+                    if (!temIntersecao(p1, p2, p3, p4)) { // Verifica se finalizou o laço com uma interseção.
+                        v1 = buscarVertice(p1.getX(), p1.getY(), g);// Caso não tenha sido finalizado com uma interseção, então podemos adicionar a aresta
+                        v2 = buscarVertice(p2.getX(), p2.getY(), g);// entre os pontos no grafo g.
+                        g.inserirArestaNaoOrientada(v1, v2, calcularDistancia(p1, p2));
+                    }
+                }
+            }
         }
     }
 
@@ -297,60 +411,18 @@ public class Controller {
     }
 
     /**
-     * @return the pInicio
+     * Verifica se existe interseção entre os seguimentos de reta A(p1,p2) e B(p3, p4).
+     * @param p1 - Ponto de origem do segmento de reta A.
+     * @param p2 - Ponto final do segmento de reta A.
+     * @param p3 - Ponto de origem do segmento de reta B.
+     * @param p4 - Ponto final do segmento de reta B.
+     * @return false - Caso os segmentos de reta não possem uma interseção, true - Caso exista interseção entre os dois seguimentos de reta.
      */
-    public Ponto getpInicio() {
-        return pInicio;
-    }
-
-    /**
-     * Altera o ponto de início.
-     *
-     * @param x - Posição X do novo ponto.
-     * @param y - Posição Y do novo ponto.
-     */
-    public void setpInicio(int x, int y) {
-        this.pInicio = new Ponto(x, y, false);
-    }
-
-    /**
-     * @return the pFim
-     */
-    public Ponto getpFim() {
-        return pFim;
-    }
-
-    /**
-     * Altera o ponto final.
-     *
-     * @param x - Posição X do novo ponto.
-     * @param y - Posição Y do novo ponto.
-     */
-    public void setpFim(int x, int y) {
-        this.pFim = new Ponto(x, y, false);
-    }
-
-    public void exibirPontos(Grafo grafo) {
-        Vertice v;
-        Ponto p;
-        Iterator<Vertice> it = grafo.getVertices().iterator();
-        while (it.hasNext()) {
-            v = it.next();
-            p = (Ponto) v.getObjeto();
-            System.out.println("Ponto(" + p.getX() + "," + p.getY() + ")");
+    private boolean temIntersecao(Ponto p1, Ponto p2, Ponto p3, Ponto p4) {
+        if(p1 == null || p2 == null || p3 == null || p4 == null){// Caso algum ponto seja inválido.
+            return false;
         }
-    }
-
-    public void exibirArestas(Grafo grafo) {
-        Aresta a;
-        Ponto p1, p2;
-        Iterator<Aresta> it = grafo.getArestas().iterator();
-        while (it.hasNext()) {
-            a = it.next();
-            p1 = (Ponto) a.getVertice1().getObjeto();
-            p2 = (Ponto) a.getVertice2().getObjeto();
-            System.out.println("Ponto (" + p1.getX() + "," + p1.getY() + ") - (" + p2.getX() + "," + p2.getY() + ")");
-        }
+        return Line2D.linesIntersect(p1.getX(), p1.getY(), p2.getX(), p2.getY(), p3.getX(), p3.getY(), p4.getX(), p4.getY());
     }
 
     private void exibirCaminho(Grafo grafo, Vertice inicio, Vertice fim) {
