@@ -84,7 +84,7 @@ public class FXMLDocumentController implements Initializable {
      */
     @FXML
     private void eventCalcularCaminho(){
-        Controller.getInstance().expandirObstaculos();
+        Controller.getInstance().criarGrafoDeVisibilidade();
     }
     
     /* Métodos de Controle */
