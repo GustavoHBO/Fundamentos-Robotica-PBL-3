@@ -25,8 +25,9 @@ import util.Grafo;
 import util.Vertice;
 
 /**
- *
- * @author gautstafr
+ * Classe controller, possui os métodos necessários para um bom funcionamento do sistema.
+ * @author Gustavo Henrique.
+ * @since 22 de Fevereiro de 2018.
  */
 public class Controller {
 
@@ -40,6 +41,7 @@ public class Controller {
     /* Grafo Visibilidade */
     private Grafo grafoVisibilidade;
 
+    /* Singleton */
     private static Controller controller; // Declaração do Controller.
 
     /* Variáveis */
@@ -75,114 +77,158 @@ public class Controller {
     }
 
     /* End Singleton */
+    
+    /**
+     * Método de adicionar obstáculo. Adiciona um obstáculo no grafo de obstáculos(grafoObstaculos). Porém, antes é verificado se existe
+     * algum obstáculo por perto(1 unidade de deslocamento). Caso não exista obstáculos próximos o obstáculo é criado e o método retorna 1,
+     * caso contrário, o método retorna 0.
+     * @param x - Posição no eixo X no qual será criado o obstáculo.
+     * @param y - Posição no eixo Y no qual será criado o obstáculo.
+     * @return 0 - Caso o obstáculo não seja criado, 1 - Caso o obstáculo seja criado.
+     */
     public int adicionarObstaculo(int x, int y) {
         Ponto p;
-        int[] arrayX = {-1, 0, 1, 1, 1, 0, -1, -1, -1};
-        int[] arrayY = {-1, -1, -1, 0, 1, 1, 1, 0, -1};
-        for (int i = 0; i < 8; i++) {
-            p = buscarPonto(x + arrayX[i], y + arrayY[i], grafoObstaculos);
-            if (p != null) {
+        int[] arrayX = {-1, 0, 1, 1, 1, 0, -1, -1, -1};// Array que controla a forma que o "for" vai varrer em torno do ponto(coordenadas x).
+        int[] arrayY = {-1, -1, -1, 0, 1, 1, 1, 0, -1};// Array que controla a forma que o "for" vai varrer em torno do ponto(coordenadas x).
+        for (int i = 0; i < 8; i++) {// Percorre em volta do ponto.
+            p = buscarPonto(x + arrayX[i], y + arrayY[i], grafoObstaculos);// Busca o ponto.
+            if (p != null) {// Verifica se já existe um ponto. Se existir retorna 0 e não adiciona o obstáculo.
                 return 0;
             }
         }
-        if (buscarPonto(x, y, grafoObstaculos) == null) {
-            inserirPonto(new Ponto(x, y, true), grafoObstaculos);
+        /* Caso não exista obstáculos por perto, verifica-se então se existe um obstáculo no ponto determinado */
+        if (buscarPonto(x, y, grafoObstaculos) == null) {// Se não existir cria o ponto.
+            inserirPonto(new Ponto(x, y, true), grafoObstaculos);// Cria o ponto e o insere no grafo de obstáculos(grafoObstaculos).
             return 1;
         }
         return 0;
     }
 
+    /**
+     * Método para remoção de obstáculos, utilizando os parâmetros recebidos é removido o obstáculo correspondente, se existir.
+     * @param x - Posição no eixo X no qual será removido o obstáculo.
+     * @param y - Posição no eixo Y no qual será removido o obstáculo.
+     */
     public void removerObstaculo(int x, int y) {
-        Ponto p = buscarPonto(x, y, grafoObstaculos);
-        if (p != null) {
-            grafoObstaculos.removerVertice(p);
+        Ponto p = buscarPonto(x, y, grafoObstaculos);// Busca o ponto.
+        if (p != null) {// Verifica se o ponto existe.
+            grafoObstaculos.removerVertice(p); // Caso exista o ponto é removido.
         }
     }
 
+    /**
+     * Método para criação de pontos no grafo determinado. Cria o ponto utilizando os parâmetros recebidos e retorna-o. Caso o ponto
+     * já exista ele é retornado, se o ponto exceder os limites do plano ele não é adicionado.
+     * @param x - Posição no eixo X no qual será criado o ponto.
+     * @param y - Posição no eixo Y no qual será criado o ponto.
+     * @param g - Grafo no qual o ponto vai ser criado.
+     * @return null - Caso o ponto exceda os limites do plano, ou se o grafo seja nulo, p - Caso o ponto seja criado.
+     */
     private Ponto criarPonto(int x, int y, Grafo g) {
         Ponto p;
-        if (x >= 0 && x < TTOTALX) {
-            if (y >= 0 && y < TTOTALY) {
-                p = buscarPonto(x, y, g);
+        if (g == null) {// Verifica se o grafo é nulo.
+            return null;
+        } else if (x >= 0 && x < TTOTALX) {// Verifica se o ponto excede o limite do eixo X.
+            if (y >= 0 && y < TTOTALY) {// Verifica se o ponto excede o limite do eixo Y.
+                p = buscarPonto(x, y, g); // Verifica se o ponto já existe no grafo determinado.
                 if (p != null) {
                     return p;
                 }
-                return new Ponto(x, y, false);
+                return new Ponto(x, y, false); // Caso não exista o ponto e ele no ultrapasse os limites, o ponto é criado.
             }
         }
         return null;
     }
 
+    /**
+     * Método de inserção de ponto. Insere o ponto determinado no grafo escolhido. O ponto só é inserido se o ponto e o grafo recebidos não
+     * forem nulos. Caso o ponto já exista o vértice que o contém é retornado.
+     * @param p - Ponto a ser inserido.
+     * @param g - Grafo no qual o ponto vai ser inserido.
+     * @return null - Caso o ponto e o grafo sejam nulos, v - Vértice que contém o ponto.
+     */
     private Vertice inserirPonto(Ponto p, Grafo g) {
         Vertice v;
         if (p == null || g == null) {
             return null;
         } else {
-            v = buscarVertice(p.getX(), p.getY(), g);
-            if(v != null){
-                return v;
+            v = buscarVertice(p.getX(), p.getY(), g);// Busca o vértice que contém o ponto.
+            if(v != null){ // Verifica se existe o vértice.
+                return v;// Caso exista é retornado.
             }
-            return g.inserir(p);
+            return g.inserir(p);//Insere o ponto e retorna o seu vértice.
         }
     }
 
+    /**
+     * Cria aresta não orientada entre os vértices determinados, com o peso igual a distância recebida, no grafo passado.
+     * @param v1 - Vértice 1.
+     * @param v2 - Vértice 2.
+     * @param distancia - Peso da aresta a ser criada.
+     * @param g - Grafo no qual a aresta vai ser criada.
+     */
     private void criarArestaNaoOrientada(Vertice v1, Vertice v2, double distancia, Grafo g) {
-        if (v1 != null && v2 != null && g != null) {
+        if (v1 != null && v2 != null && g != null) {// Verifica se os parâmetros são válidos.
             g.inserirArestaNaoOrientada(v1, v2, distancia);
         }
     }
 
-    public Grafo criarGrafoDeVisibilidade() {
+    /**
+     * Cria o grafo de expansão. Utilizando o grafo de obstáculos, é criado o grafo de expansão. Este método expande os obstáculos
+     * e cria as arestas entre os vértices dos mesmos.
+     * @return null - Caso o grafo de obstáculos seja inválido, grafoEx - Grafo de expansão.
+     */
+    public Grafo expandirObstaculos() {
+        
+        /*
+        Este método analisa os pontos em volta do ponto obstáculo do grafo de obstáculos(grafoObstaculos). Começando do primeiro ponto na diagonal
+        secundária, depois o ponto a direita, primeiro ponto na diagonal principal, em seguida o ponto abaixo, último ponto da diagonal secundária,
+        ponto a esquerda, último ponto da diagonal principal e por fim o ponto acima. O ponto no meio não é verificado, o mesmo não deve existir
+        pois segundo o grafo de obstáculos, esse ponto é um obstáculo.
+        */
+        
         Iterator<Vertice> it;
         Vertice v1, v2, v3;
         Ponto p1, p2, p3;
         Grafo grafoEx;
         int x, y;
-        int[] arrayX = {-1, 0, 1, 1, 1, 0, -1, -1, -1};
-        int[] arrayY = {-1, -1, -1, 0, 1, 1, 1, 0, -1};
+        int[] arrayX = {-1, 0, 1, 1, 1, 0, -1, -1, -1}; // Array de controle da forma de varredura em volta do ponto no eixo X.
+        int[] arrayY = {-1, -1, -1, 0, 1, 1, 1, 0, -1}; // Array de controle da forma de varredura em volta do ponto no eixo X.
 
-        if (grafoObstaculos == null) {
-            return null;
+        if (grafoObstaculos == null || grafoObstaculos.getVertices().isEmpty()) {// Verifica se o grafo é válido, caso 
+            return null;                                                         //seja nulo o segundo parâmetro não é executado.
         } else {
-            grafoEx = new Grafo();
+            grafoEx = new Grafo(); // Intancia o grafo de expansão.
             it = grafoObstaculos.getVertices().iterator();
-            while (it.hasNext()) {
+            while (it.hasNext()) {// Laço para percorrer todos os vértices.
                 v1 = it.next();
                 p1 = (Ponto) v1.getObjeto();
                 x = p1.getX();
                 y = p1.getY();
                 p2 = null;
                 v2 = null;
-                for (int i = 0; i < 8; i++) {
-                    System.out.println(i);
-                    if (p2 == null) {
-                        System.out.println("Ponto: (" + (x + arrayX[i]) + "," + (y + arrayY[i]) + ")");
-                        p2 = criarPonto(x + arrayX[i], y + arrayY[i], grafoEx);
-                        v2 = inserirPonto(p2, grafoEx);
-                        if(i == 7){
+                for (int i = 0; i < 8; i++) {// Percorre os pontos em volta do ponto p1.
+                    if (p2 == null) { // Verifica se p2 é nulo, significa que não foi definido nenhum dos vértices da aresta.
+                        p2 = criarPonto(x + arrayX[i], y + arrayY[i], grafoEx);// Cria o ponto no grafo e armazená-o.
+                        v2 = inserirPonto(p2, grafoEx);// Insere o ponto no grafo e armazená-o.
+                        if(i == 7){ // Verifica se está na última execução.
                             p3 = criarPonto(x + arrayX[0], y + arrayY[0], grafoEx);
                             v3 = inserirPonto(p3, grafoEx);
-                            criarArestaNaoOrientada(v2, v3, calcularDistancia(p2, p3), grafoEx);
-                        }
-                        if(p2 == null){
-                            System.out.println("Ponto Nulo");
-                        }
-                    } else {
-                        System.out.println("Verificando se existe próximo");
-                        p3 = criarPonto(x + arrayX[i + 1], y + arrayY[i + 1], grafoEx);
-                        if (p3 != null && (p3.getX() == p2.getX() || p3.getY() == p2.getY())) {
-                            System.out.println("Existe");
-                            v3 = inserirPonto(p3, grafoEx);
-                            criarArestaNaoOrientada(v2, v3, calcularDistancia(p2, p3), grafoEx);
-                            v2 = v3;
+                            criarArestaNaoOrientada(v2, v3, calcularDistancia(p2, p3), grafoEx);// Cria aresta entre o último ponto
+                        }                                                                       // encontrado.
+                    } else { // Caso p2 não seja nulo, é necessário encontrar o próximo ponto para pode criar a aresta.
+                        p3 = criarPonto(x + arrayX[i + 1], y + arrayY[i + 1], grafoEx); // Busca o próximo ponto a ser analizado.
+                        if (p3 != null && (p3.getX() == p2.getX() || p3.getY() == p2.getY())) { // Verifica se o ponto existe, caso exista
+                            v3 = inserirPonto(p3, grafoEx);                         // verifica se é colinear com o ponto anterior(p2).
+                            criarArestaNaoOrientada(v2, v3, calcularDistancia(p2, p3), grafoEx);// Caso sejam colineares, a aresta é criada.
+                            v2 = v3; // Este vértice passa a ser o vertice anterior dá próxima análise.
                             p2 = p3;
-                            i++;
-                        } else {
-                            System.out.println("Não Existe");
+                            i++; // Como o próximo ponto já foi analisado, ele é pulado.
+                        } else { // Caso o ponto exista.
                             p3 = criarPonto(x + arrayX[i], y + arrayY[i], grafoEx);
                             v3 = inserirPonto(p3, grafoEx);
-                            criarArestaNaoOrientada(v2, v3, calcularDistancia(p2, p3), grafoEx);
-                            v2 = v3;
+                            criarArestaNaoOrientada(v2, v3, calcularDistancia(p2, p3), grafoEx); // Cria a aresta entre os pontos.
+                            v2 = v3;// Este vértice passa a ser o vertice anterior dá próxima análise.
                             p2 = p3;
                         }
                     }
@@ -216,6 +262,13 @@ public class Controller {
         return null; // Retorna caso o vértice não exista.
     }
 
+    /**
+     * Busca o vértice que possua o ponto com as coordenadas especificadas no grafo definido.
+     * @param x - Coordenada no eixo X do ponto.
+     * @param y - Coordenada no eixo Y do ponto.
+     * @param grafo - Grafo no qual o vértice será procurado.
+     * @return null - Caso o vértice não exista, v - Caso o vértice exista.
+     */
     private Vertice buscarVertice(int x, int y, Grafo grafo) {
         Vertice v;
         Ponto p;
@@ -230,11 +283,17 @@ public class Controller {
         return null;
     }
 
+    /**
+     * Calcula a distância entre os pontos recebidos. Cria-se um vetor, e dele é retirado o módulo.
+     * @param a - Ponto 1.
+     * @param b - Ponto 2.
+     * @return 0 - Caso algum parâmetro seja inválido, double - Distância entre os pontos.
+     */
     private double calcularDistancia(Ponto a, Ponto b) {
         if(a == null || b == null){
             return 0;
         }
-        return (Math.sqrt((a.getX() - b.getX()) * (a.getX() - b.getX()) + (a.getY() - b.getY()) * (a.getY() - b.getY())));
+        return (Math.sqrt((a.getX() - b.getX()) * (a.getX() - b.getX()) + (a.getY() - b.getY()) * (a.getY() - b.getY())));// Calcula o módulo.
     }
 
     /**
