@@ -49,7 +49,7 @@ public class Vertice {
 	/*___________________________________________________________________________________________*/
 	/**
 	 * Construtor da classe.	
-	 * @param Object - Objeto do vértice.
+	 * @param objeto - Objeto do vértice.
 	 */
 	public Vertice(Object objeto){
 		this.setObjeto(objeto);
@@ -68,7 +68,7 @@ public class Vertice {
 	/*___________________________________________________________________________________________*/
 	/**
 	 * Altera o grau do vértice.
-	 * @param int - Novo grau do vértice.
+	 * @param grau - Novo grau do vértice.
 	 */
 	public void setGrau(int grau) {
 		this.grau = grau;
@@ -86,7 +86,7 @@ public class Vertice {
 	/*___________________________________________________________________________________________*/
 	/**
 	 * Altera o objeto do vértice.
-	 * @param Object - Novo objeto do vértice.
+	 * @param objeto - Novo objeto do vértice.
 	 */
 	public void setObjeto(Object objeto) {
 		this.objeto = objeto;
