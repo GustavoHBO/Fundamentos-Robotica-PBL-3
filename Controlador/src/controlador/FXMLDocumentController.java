@@ -17,7 +17,7 @@ import model.Circulo;
 import util.Grafo;
 
 /**
- *
+ *  Classe controller, possue os métodos necessários para o bom funcionamento da interface gráfica.
  * @author gautstafr
  */
 public class FXMLDocumentController implements Initializable {
@@ -84,7 +84,7 @@ public class FXMLDocumentController implements Initializable {
      */
     @FXML
     private void eventCalcularCaminho(){
-        Controller.getInstance().criarGrafoDeVisibilidade();
+        Controller.getInstance().expandirObstaculos();
     }
     
     /* Métodos de Controle */
@@ -101,6 +101,7 @@ public class FXMLDocumentController implements Initializable {
         int espacoX = 0;
         int espacoY = ESPACOBORDA;
         
+        /* Posiciona os circulos espaçadamente a mesma distância, além de um pequeno espaço entre a borda */
         for (i = 0; i < QTNVV; i++) {
             espacoX = ESPACOBORDA;
             for (j = 0; j < QTNVH; j++) {
