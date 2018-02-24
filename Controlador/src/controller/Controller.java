@@ -177,11 +177,9 @@ public class Controller {
     }
 
     public void exibirPontos(Grafo grafo) {
-        
         if(grafo == null){
             return;
         }
-        
         Vertice v;
         Ponto p;
         Iterator<Vertice> it = grafo.getVertices().iterator();
@@ -193,11 +191,9 @@ public class Controller {
     }
 
     public void exibirArestas(Grafo grafo) {
-        
-        if(grafo == null){
+        if (grafo == null) {
             return;
         }
-        
         Aresta a;
         Ponto p1, p2;
         Iterator<Aresta> it = grafo.getArestas().iterator();
