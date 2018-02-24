@@ -83,8 +83,10 @@ public class FXMLDocumentController implements Initializable {
      * Evento no qual calculo o melhor caminho entre o ponto de início e de fim.
      */
     @FXML
-    private void eventCalcularCaminho(){
-        Controller.getInstance().expandirObstaculos();
+    private void eventCalcularCaminho() {
+        if (!Controller.getInstance().calcularCaminho()) {
+            System.out.println("Não Existe Caminhos");
+        }
     }
     
     /* Métodos de Controle */
