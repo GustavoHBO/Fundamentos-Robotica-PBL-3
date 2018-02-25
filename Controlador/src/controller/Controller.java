@@ -362,6 +362,7 @@ public class Controller {
                             }
                             System.out.println("Sem interseção");
                         }
+                        
                         System.out.println("Próximo Ponto");
                         if (!temIntersecao(p1, p2, p3, p4) && !g.getArestas().isEmpty()) { // Verifica se finalizou o laço com uma interseção e verifica se só tem o ponto de início e o de fim.
                             v1 = buscarVertice(p1.getX(), p1.getY(), g);// Caso não tenha sido finalizado com uma interseção, então podemos adicionar a aresta
@@ -442,14 +443,21 @@ public class Controller {
      * @return false - Caso os segmentos de reta não possem uma interseção, true - Caso exista interseção entre os dois seguimentos de reta.
      */
     private boolean temIntersecao(Ponto p1, Ponto p2, Ponto p3, Ponto p4) {
-        if(p1 == null || p2 == null || p3 == null || p4 == null){// Caso algum ponto seja inválido.
+        Ponto p;
+        if (p1 == null || p2 == null || p3 == null || p4 == null) {// Caso algum ponto seja inválido.
             return false;
         } else {
-            if(Line2D.linesIntersect(p1.getX(), p1.getY(), p2.getX(), p2.getY(), p3.getX(), p3.getY(), p4.getX(), p4.getY())){
-                if((p1.getX() == p3.getX() && p1.getY() == p3.getY()) || (p1.getX() == p4.getX() && p1.getY() == p4.getY())){
+            for (Vertice vertice : grafoObstaculos.getVertices()) {
+                p = (Ponto) vertice.getObjeto();
+                if (Line2D.linesIntersect(p1.getX(), p1.getY(), p2.getX(), p2.getY(), p.getX(), p.getY(), p.getX(), p.getY())) {
+                    return true;
+                }
+            }
+            if (Line2D.linesIntersect(p1.getX(), p1.getY(), p2.getX(), p2.getY(), p3.getX(), p3.getY(), p4.getX(), p4.getY())) {
+                if ((p1.getX() == p3.getX() && p1.getY() == p3.getY()) || (p1.getX() == p4.getX() && p1.getY() == p4.getY())) {
                     return false;
                 }
-                if ((p2.getX() == p3.getX() && p2.getY() == p3.getY()) || (p2.getX() == p4.getX() && p2.getY() == p4.getY())){
+                if ((p2.getX() == p3.getX() && p2.getY() == p3.getY()) || (p2.getX() == p4.getX() && p2.getY() == p4.getY())) {
                     return false;
                 }
             }

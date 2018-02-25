@@ -2,7 +2,7 @@ Coisas a serem consertadas:
 
  Prioridades:
 	Planejador
-  - O algoritmo de criar o grafo de visibilidade está criando arestas dentro dos obstáculos.
+  - O algoritmo de criar o grafo de visibilidade está criando arestas dentro dos obstáculos. 			------ OK.
   - Terminar a comunicação Bluetooth.
   - Terminar a construção do caminho a ser enviado pelo Bluetooth.
 	
