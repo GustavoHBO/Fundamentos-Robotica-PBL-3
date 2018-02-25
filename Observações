@@ -1,0 +1,14 @@
+Coisas a serem consertadas:
+
+ Prioridades:
+	Planejador
+  - O algoritmo de criar o grafo de visibilidade está criando arestas dentro dos obstáculos.
+  - Terminar a comunicação Bluetooth.
+  - Terminar a construção do caminho a ser enviado pelo Bluetooth.
+	
+	Robô
+  - Construir o método de feedback do robô
+
+Definições:
+
+ - Na trajetória do caminho, não mandar executar movimentos maiores que 1580 cm.
