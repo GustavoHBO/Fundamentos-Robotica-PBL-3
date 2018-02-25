@@ -31,11 +31,40 @@ public class Grafo{
     /**
      * Construtor, inicializa os atributos da classe.
      */
-    public Grafo(){
-            numVertices = 0;
-            numArestas = 0;
-            listaVertices = new ArrayList<>();
-            listaArestas = new ArrayList<>();
+    public Grafo() {
+        numVertices = 0;
+        numArestas = 0;
+        listaVertices = new ArrayList<>();
+        listaArestas = new ArrayList<>();
+    }
+    
+    /*______________________________________________________________________________________________________________________________*/
+    /**
+     * Construtor, inicializa os atributos da classe utilizando os parâmetros definidos.
+     * @param g - Grafo a ser copiado.
+     */
+    public Grafo(Grafo g) {
+        if (g == null) {
+            this.numVertices = 0;
+            this.numArestas = 0;
+            this.listaVertices = new ArrayList<>();
+            this.listaArestas = new ArrayList<>();
+        } else if (g.getVertices() == null) {
+            this.numVertices = 0;
+            this.numArestas = 0;
+            this.listaVertices = new ArrayList<>();
+            this.listaArestas = new ArrayList<>();
+        } else if (g.getArestas() == null) {
+            this.listaVertices = new ArrayList<>(g.getVertices());
+            this.numVertices = listaVertices.size();
+            this.listaArestas = new ArrayList<>();
+            this.numArestas = 0;
+        } else {
+            this.numVertices = g.getVertices().size();
+            this.numArestas = g.getArestas().size();
+            this.listaVertices = new ArrayList<>(g.getVertices());
+            this.listaArestas = new ArrayList<>(g.getArestas());
+        }
     }
 
     /*______________________________________________________________________________________________________________________________*/
