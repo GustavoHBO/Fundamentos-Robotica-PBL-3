@@ -121,6 +121,7 @@ public class Controller {
     
     public boolean calcularCaminho(){
         Grafo grafoExpandido = expandirObstaculos();
+        Grafo gObstaculos = new Grafo(grafoExpandido);
         Ponto pontoInicio, pontoFim;
         Vertice v1, v2;
         
@@ -132,12 +133,14 @@ public class Controller {
         } else {
             if(grafoExpandido == null){
                 grafoExpandido = new Grafo();
+                gObstaculos = new Grafo();
             }
             v1 = inserirPonto(pontoInicio, grafoExpandido);
             v2 = inserirPonto(pontoFim, grafoExpandido);
-            criarGrafoVisibilidade(grafoExpandido);
+            criarGrafoVisibilidade(grafoExpandido, gObstaculos);
             exibirPontos(grafoExpandido);
             exibirArestas(grafoExpandido);
+            exibirCaminho(grafoExpandido, v1, v2);
         }
         return true;
     }
@@ -183,6 +186,7 @@ public class Controller {
         Vertice v;
         Ponto p;
         Iterator<Vertice> it = grafo.getVertices().iterator();
+        System.out.println("Tem " + grafo.getVertices().size() + "vértice(s)");
         while (it.hasNext()) {
             v = it.next();
             p = (Ponto) v.getObjeto();
@@ -197,6 +201,7 @@ public class Controller {
         Aresta a;
         Ponto p1, p2;
         Iterator<Aresta> it = grafo.getArestas().iterator();
+        System.out.println("Tem " + grafo.getArestas().size() + "aresta(s)");
         while (it.hasNext()) {
             a = it.next();
             p1 = (Ponto) a.getVertice1().getObjeto();
@@ -331,37 +336,43 @@ public class Controller {
         }
     }
     
-    private void criarGrafoVisibilidade(Grafo g) {
-        Iterator<Vertice> it;
-        Vertice vP1, vP2; // Vértice do ponto 1 e ponto 2.
+    private void criarGrafoVisibilidade(Grafo g, Grafo gObstaculos) {
+        Iterator<Vertice> itV1, itV2;
+        Iterator<Aresta> itA1;
+        Vertice v1, v2, vP1, vP2; // Vértice do ponto 1 e ponto 2.
         Ponto p1, p2, p3, p4;
-        if (g == null) {// Caso o grafo sejá inválido.
-            return;
-        } else {
-            for (Vertice v1 : g.getVertices()) {
-                for (Vertice v2 : g.getVertices()) {
-                    p1 = (Ponto) v1.getObjeto();
-                    p2 = (Ponto) v2.getObjeto();
-                    p3 = null;
-                    p4 = null;
-                    for (Aresta a1 : g.getArestas()) {
-                        p3 = (Ponto) a1.getVertice1().getObjeto();
-                        p4 = (Ponto) a1.getVertice2().getObjeto();
-                        if (temIntersecao(p1, p2, p3, p4)) {
-                            System.out.println("Break");
-                            break;
+        if (g != null) {// Caso o grafo seja válido.
+            itV1 = g.getVertices().iterator();
+            while (itV1.hasNext()) {
+                v1 = itV1.next();
+                itV2 = g.getVertices().iterator();
+                while (itV2.hasNext()) {
+                    v2 = itV2.next();
+                    if (!v1.equals(v2)) { // Se forem iguais pulo para o próximo.
+                        p1 = (Ponto) v1.getObjeto();
+                        p2 = (Ponto) v2.getObjeto();
+                        p3 = null;
+                        p4 = null;
+                        for (Aresta a1 : gObstaculos.getArestas()) {
+                            p3 = (Ponto) a1.getVertice1().getObjeto();
+                            p4 = (Ponto) a1.getVertice2().getObjeto();
+                            if (temIntersecao(p1, p2, p3, p4)) {
+                                System.out.println("Break");
+                                break;
+                            }
+                            System.out.println("Sem interseção");
                         }
-                        System.out.println("Sem interseção");
-                    }
-                    System.out.println("Próximo Ponto");
-                    if (!temIntersecao(p1, p2, p3, p4) && !g.getArestas().isEmpty() && v1 != v2) { // Verifica se finalizou o laço com uma interseção e verifica se só tem o ponto de início e o de fim.
-                        v1 = buscarVertice(p1.getX(), p1.getY(), g);// Caso não tenha sido finalizado com uma interseção, então podemos adicionar a aresta
-                        v2 = buscarVertice(p2.getX(), p2.getY(), g);// entre os pontos no grafo g.
-                        g.inserirArestaNaoOrientada(v1, v2, calcularDistancia(p1, p2));
-                    } else if(g.getArestas().isEmpty() && v1 != v2){
-                        g.inserirArestaNaoOrientada(v1, v2, calcularDistancia(p1, p2));
+                        System.out.println("Próximo Ponto");
+                        if (!temIntersecao(p1, p2, p3, p4) && !g.getArestas().isEmpty()) { // Verifica se finalizou o laço com uma interseção e verifica se só tem o ponto de início e o de fim.
+                            v1 = buscarVertice(p1.getX(), p1.getY(), g);// Caso não tenha sido finalizado com uma interseção, então podemos adicionar a aresta
+                            v2 = buscarVertice(p2.getX(), p2.getY(), g);// entre os pontos no grafo g.
+                            g.inserirArestaNaoOrientada(v1, v2, calcularDistancia(p1, p2));
+                        } else if (g.getArestas().isEmpty()) {
+                            g.inserirArestaNaoOrientada(v1, v2, calcularDistancia(p1, p2));
+                        }
                     }
                 }
+
             }
         }
     }
@@ -433,8 +444,17 @@ public class Controller {
     private boolean temIntersecao(Ponto p1, Ponto p2, Ponto p3, Ponto p4) {
         if(p1 == null || p2 == null || p3 == null || p4 == null){// Caso algum ponto seja inválido.
             return false;
+        } else {
+            if(Line2D.linesIntersect(p1.getX(), p1.getY(), p2.getX(), p2.getY(), p3.getX(), p3.getY(), p4.getX(), p4.getY())){
+                if((p1.getX() == p3.getX() && p1.getY() == p3.getY()) || (p1.getX() == p4.getX() && p1.getY() == p4.getY())){
+                    return false;
+                }
+                if ((p2.getX() == p3.getX() && p2.getY() == p3.getY()) || (p2.getX() == p4.getX() && p2.getY() == p4.getY())){
+                    return false;
+                }
+            }
+            return Line2D.linesIntersect(p1.getX(), p1.getY(), p2.getX(), p2.getY(), p3.getX(), p3.getY(), p4.getX(), p4.getY());
         }
-        return Line2D.linesIntersect(p1.getX(), p1.getY(), p2.getX(), p2.getY(), p3.getX(), p3.getY(), p4.getX(), p4.getY());
     }
 
     private void exibirCaminho(Grafo grafo, Vertice inicio, Vertice fim) {
@@ -449,7 +469,7 @@ public class Controller {
         Iterator<Vertice> it2;
         Ponto p;
         int i = 0;
-        if (!it.hasNext()) {
+        if (caminhos.isEmpty()) {
             System.out.println("Não existe caminhos");
         } else {
             while (it.hasNext()) {
