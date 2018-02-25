@@ -15,7 +15,7 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
+#*.jar # Habilitando o envio de arquivos .jar, pois vamos utilizar bibliotecas que não existe no pacote JDK Java.
 *.war
 *.ear
 *.zip
