@@ -31,10 +31,19 @@ import util.Vertice;
  * @since 22 de Fevereiro de 2018.
  */
 public class Controller {
-
-    /* Definições */
+//circunferência
+                                /* Definições */
     private final int TTOTALX = 20; // Tamanho total do mapa.
     private final int TTOTALY = 20; // Tamanho total do mapa.
+    
+    private final int CLICKSENCODER = 360; // Quantidade de click's de uma volta completa da roda do robô;
+    
+    private final double RAIORODA = 2.8; // Em centímetros.
+    private final double CIRCUNFERENCIARODA = Math.PI * 2 * RAIORODA; // Circuferência do circulo formado por um giro de 360º da roda.
+                                                                 // Ou seja, a distância percorrida com um giro completo.
+    private final double RAIOEIXO = 8.85; // Em centímetros. Medidas feitas com uma régua com erro de +- 0.05 cm.
+    private final double CIRCUNFERENCIAROBO = Math.PI * 2 * RAIOEIXO; // Circuferência do circulo formado por um giro de 360º do robô.
+                                                                 // Ou seja, a distância percorrida com um giro completo.
 
     /* Grafo de obstáculos */
     private final Grafo grafoObstaculos;
@@ -433,14 +442,47 @@ public class Controller {
         }
         return (Math.sqrt((a.getX() - b.getX()) * (a.getX() - b.getX()) + (a.getY() - b.getY()) * (a.getY() - b.getY())));// Calcula o módulo.
     }
+    
+    private double produtoEscalar(Ponto p1, Ponto p2, Ponto p3, Ponto p4){
+        double dx1 = p1.getX() - p2.getX();
+        double dy1 = p1.getY() - p2.getY();
+        double dx2 = p3.getX() - p4.getX();
+        double dy2 = p3.getY() - p4.getY();
+        return dx1*dx2+dy1*dy2;
+    }
+    
+    private double modulo(Ponto p1, Ponto p2){
+        double dx = p1.getX() - p2.getX();
+        double dy = p1.getY() - p2.getY();
+        return Math.sqrt(dx*dx + dy*dy);
+    }
+    
+    /**
+     * Transforma uma distância em centímetros em clicks do encoder do motor do robô.
+     * @param dist - Distância em centímetros.
+     * @return qtn - Quantidade de clicks do encoder para chegar a distância.
+     */
+    private int transCmCl(double dist){ // Transforma centímetros em clicks da roda do robô.
+        return (int) Math.round(dist/CIRCUNFERENCIARODA);
+    }
+    
+    /**
+     * Transforma a quantidade de graus, em relação ao robô, em clicks do encoder do motor. Ou seja, transforma os graus na quantidade
+     * necessária de clicks que o encoder dever locomover-se para realizar o giro esperado.
+     * @param graus - Quantidade de graus que o robô deve girar.
+     * @return int - Quantidade de clicks que o robô deve girar.
+     */
+    private int transGrCl(double graus){
+        return transCmCl(graus*(CIRCUNFERENCIAROBO/360));
+    }
 
     /**
-     * Verifica se existe interseção entre os seguimentos de reta A(p1,p2) e B(p3, p4).
+     * Verifica se existe intersecção entre os seguimento de reta A(p1,p2) e B(p3, p4).
      * @param p1 - Ponto de origem do segmento de reta A.
      * @param p2 - Ponto final do segmento de reta A.
      * @param p3 - Ponto de origem do segmento de reta B.
      * @param p4 - Ponto final do segmento de reta B.
-     * @return false - Caso os segmentos de reta não possem uma interseção, true - Caso exista interseção entre os dois seguimentos de reta.
+     * @return false - Caso os segmentos de reta não possam uma intersecção, true - Caso exista intersecção entre os dois seguimento de reta.
      */
     private boolean temIntersecao(Ponto p1, Ponto p2, Ponto p3, Ponto p4) {
         Ponto p;
@@ -490,23 +532,44 @@ public class Controller {
                     System.out.print("(" + p.getX() + "," + p.getY() + ") ");
                 }
                 System.out.println("");
+                exibirProtocoloCaminho(next);
             }
         }
     }
 
     private void exibirProtocoloCaminho(List<Vertice> caminho) {
-        String protocolo = "#" + (caminho.size() - 1);
-        protocolo += "00-00-";
-        Vertice v1 = null, v2 = null;
-        Ponto p1, p2, p3;
-        double dist = 0;
-        for (Vertice vertice : caminho) {
+        byte[] protocolo = new byte[128];
+        protocolo[0] = 23;
+        Iterator<Vertice> itV = caminho.iterator();
+        Vertice v1 = null, vertice;
+        int i = 0;
+        Ponto p1, p2, p3 = null;
+        double dist = 0, ang = 0, escalar, modV1, modV2;
+        while (itV.hasNext()) {
+            vertice = itV.next();
             if (v1 == null) {
                 v1 = vertice;
+                p1 = (Ponto) v1.getObjeto();
+                p3 = new Ponto(p1.getX()+1, p1.getY(), false);
             } else {
                 p1 = (Ponto) v1.getObjeto();
                 p2 = (Ponto) vertice.getObjeto();
-                p3 = new Ponto(p1.getX(), p2.getY(), false);
+                escalar = Math.abs(produtoEscalar(p1, p2, p1, p3));
+                System.out.println(escalar);
+                modV1 = modulo(p1, p2);
+                modV2 = modulo(p1, p3);
+                ang = Math.atan(escalar/(modV1*modV2));
+                System.out.println(ang);
+                if(escalar > 0){
+                    protocolo[i++] = 1;
+                } else if(escalar < 0){
+                    protocolo[i++] = 0;
+                } else {
+                    protocolo[i++] = 0;
+                    protocolo[i++] = 0;
+                }
+                v1 = vertice;
+                p3 = p1;
             }
         }
     }

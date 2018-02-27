@@ -6,7 +6,7 @@ O protocolo define apenas três operações, envio de rota planejada, envio da auto
 
 O seguinte protocolo, estabelece a estrutura da comunicação supervisor -> robô.
 
-[cIdA][qtnP]{[qtnR][qtnC][qntG][ld]}[cF] - Padrão de rota planejada(o código entre chaves pode se repetir até 30 vezes, totalizando um pacote máximo de 123 bytes).
+[cIdA][qtnP]{[qntG][ld][qtnR][qtnC]}[cF] - Padrão de rota planejada(o código entre chaves pode se repetir até 30 vezes, totalizando um pacote máximo de 123 bytes).
 
 cIdA - Caractere identificador de caminho(0x23).
 qtnP - Quantidade de passos da trajetoria.
